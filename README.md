@@ -12,7 +12,7 @@
 
 ### Fields
 | Field Code | Description | Required | Field Format | Value | 
-| ----------- | ----------- | -------- | ------- | ------- | ------- |
+| ----------- | ----------- | -------- | ------- | ------- | 
 | sub | Vehicle registration plate | &#9745; |  [*identifier*] | 06BB2020 |
 | iss | Issuing Authority |  &#9745; | Country code | ua |
 | aud | Verifier Authority | &#9745; | Country code | tr |
