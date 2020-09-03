@@ -1,10 +1,10 @@
 # Electronic Permit System
 
-## Legacy Permit System
+## Legacy Permit Flow
 
 ![w:1200](img/e-permit-old-flow.png)
 
-## New e-Permit System
+## New e-Permit Flow
 
 ![w:1200](img/e-permit-new-flow.png)
 
@@ -36,47 +36,7 @@
 {
     "id": "ua",
     "title": "Ukraine",
-    "titles": {
-      "iss": "Issuer Authority",
-      "aud": "Verifier Authority",
-      "sub": "Subject",
-      "iat": "Issuance Date",
-      "exp": "Expiration Date",
-      "ct": "Credential Type",
-      "cy": "Credential Year",
-      "cid": "Credential Identifier",
-      "oid": "Organization Identifier",
-      "on": "Organization Name",
-      "res": "Restrictions",
-      "invalid_signature_message": "Signature is not valid, check it out!",
-      "invalid_version_message": "Invalid version",
-      "invalid_cred_message": "Invalid credential payload",
-      "invalid_aud_message": "Invalid verifier",
-      "invalid_exp_message": "Credential expired",
-      "iss_notfound_message": "Issuer not found",
-      "jwk_notfound_message": "Issuer key not found",
-      "revoked_cred_message": "Revoked credential",
-      "valid_signature_message": "Signature is valid",
-      "ct_1": "Biliteral",
-      "ct_2": "Transit",
-      "ct_3": "3rd Country"
-    },
     "authorities": [
-      {
-        "id": "ua",
-        "title": "Ukraine",
-        "keys": [
-          {
-            "kty": "EC",
-            "use": "sig",
-            "kid": "1",
-            "crv": "P-256",
-            "x": "oPmyssan_NrAlsAEuFig2FdwJmWtnfsso2rfN3wclC8",
-            "y": "Sw5kgoB7fgQq7AYn7vRzOyG-g7___cp-4BHbzBQNCEU",
-            "alg": "ES256"
-          }
-        ]
-      },
       {
         "id": "tr",
         "title": "Republic Of Turkey",
@@ -98,10 +58,9 @@
 
 ### Rest Api
 
-```/credentials/{id}```:
-   - ```post ```: post a credential into verifier database(self contained auth) 
-   - ```put ``` : change credential status by verifier officer(auth required)
-   - ```get ```: get credential info and status(anonymous access)
+- ```/credentials```: post a credential into verifier database(self contained auth) 
+- ```/credentials/{id}```: get a credential info and status by hash value 
+- ```/credentials/{id}/used```: change credential status by verifier officer(auth required)
 
 > **id** is credential hash
 
