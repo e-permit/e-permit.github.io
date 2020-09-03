@@ -58,19 +58,25 @@
 
 
 ### Fields
-| Field Code | Description | Required | Field Format | Value | 
-| ----------- | ----------- | -------- | ------- | ------- | 
-| sub | Vehicle registration plate | &#9745; |  [*identifier*] | 06BB2020 |
-| iss | Issuing Authority |  &#9745; | Country code | ua |
-| aud | Verifier Authority | &#9745; | Country code | tr |
-| exp |  Date of expiry | &#9745; | Unix Epoch Time | 1311281970 |
-| iat | Date of issuance | &#9745; | Unix Epoch Time | 1311281970 |
-| cid | Credential Identifier | &#9745; | Sequential number | 1 |
-| cy | Year of issuance | &#9745; | year | 2020 |
-| ct | Credential Type | &#9745; | enum[1,2,3] | "biliteral", "transit", "3rd" |
-| oid | Organization Identifier | &#9745; | Unique organization identifier | A101.. | 
-| on | Organization Name | | Free Text(max 100) | Sample Org. |
-| res | Restrictions | | Free Text(max 100) | Sample res. |
+| Code | Field | Description | Required | Format | Sample Value | 
+| ---- | ------| ----------- | -------- | ------ | ------------ | 
+| 1 | cy | Year of the permit | &#9745; | year | 2020 |
+| 2 | exp |  Permit valid until | &#9745; | Unix Epoch Time | 1311281970 |
+| 3 | cid | Serial Number of the permit | &#9745; | Sequential number | 1 |
+| 4 | iss | This permit issued by |  &#9745; | Country code | ua |
+| 5 | iat | This permit prepared on | &#9745; | Unix Epoch Time | 1311281970 |
+| 6 | comn | Name of the company | | Free Text(max 100) | Sample Org. |
+| 7 | comid | National ID of the company | &#9745; | Unique organization identifier | A101.. | 
+| 8 | sub | Plate number(s) | &#9745; |  [*identifier*] | 06BB2020 |
+| 9 | ct | Type of the permit | &#9745; | enum[1,2,3] | "biliteral", "transit", "3rdcountry" |
+| 10 | res | Restrictions | | Free Text(max 100) | Sample res. |
+| 11 | aud | This permit issued for | &#9745; | Country code | tr |
+
+
+
+
+
+
 
 
 ### QR Code with JWS(ES256) Content
