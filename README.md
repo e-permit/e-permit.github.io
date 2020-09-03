@@ -60,16 +60,16 @@
 ### Fields
 | Code | Field | Description | Required | Format | Sample Value | 
 | ---- | ------| ----------- | -------- | ------ | ------------ | 
-| 1 | cy | Year of the permit | &#9745; | year | 2020 |
+| 1 | cy | Year of the permit | &#9745; | Year | 2020 |
 | 2 | exp |  Permit valid until | &#9745; | Unix Epoch Time | 1311281970 |
-| 3 | cid | Serial Number of the permit | &#9745; | Sequential number | 1 |
+| 3 | cid | Serial Number of the permit | &#9745; | Number | 1 |
 | 4 | iss | This permit issued by |  &#9745; | Country code | ua |
 | 5 | iat | This permit prepared on | &#9745; | Unix Epoch Time | 1311281970 |
-| 6 | comn | Name of the company | | Free Text(max 100) | Sample Org. |
-| 7 | comid | National ID of the company | &#9745; | Unique organization identifier | A101.. | 
-| 8 | sub | Plate number(s) | &#9745; |  [*identifier*] | 06BB2020 |
+| 6 | comn | Name of the company | | Text(max 100) | Sample Org. |
+| 7 | comid | National ID of the company | &#9745; | Text | A101.. | 
+| 8 | sub | Plate number(s) | &#9745; | Text | 06BB2020 |
 | 9 | ct | Type of the permit | &#9745; | enum[1,2,3] | "biliteral", "transit", "3rdcountry" |
-| 10 | res | Restrictions | | Free Text(max 100) | Sample res. |
+| 10 | res | Restrictions | | Text(max 100) | Sample res. |
 | 11 | aud | This permit issued for | &#9745; | Country code | tr |
 
 
