@@ -2,11 +2,11 @@
 
 ## Legacy Permit Flow
 
-![w:1200](img/e-permit-old-flow.png)
+![w:1000](img/e-permit-old-flow.png)
 
 ## New e-Permit Flow
 
-![w:1200](img/e-permit-new-flow.png)
+![w:1000](img/e-permit-new-flow.png)
 
 ## Implementation
 
