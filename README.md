@@ -68,7 +68,7 @@
 | 6 | comn | Name of the company | | Text(max 100) | Sample Org. |
 | 7 | comid | National ID of the company | &#9745; | Text | A101.. | 
 | 8 | sub | Plate number(s) | &#9745; | Text | 06BB2020 |
-| 9 | ct | Type of the permit | &#9745; | enum[1,2,3] | "biliteral", "transit", "3rdcountry" |
+| 9 | ct | Type of the permit | &#9745; | Enum[1,2,3] | "biliteral", "transit", "3rdcountry" |
 | 10 | res | Restrictions | | Text(max 100) | Sample res. |
 | 11 | aud | This permit issued for | &#9745; | Country code | tr |
 
