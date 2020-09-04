@@ -12,20 +12,46 @@
 
 ### Managing Digital Keys
 
-> Each party should manage own configuration about other parties
+- Issuer generates a key pair(private and public)
+- Issuer saves your private key securily on its own storage
+- Issuer sends public key to verifier authority
+- Verifier saves public key. 
 
-**Authority Config Sample**
+### Issuing Credential
+
+- Issuing authority signs credential payload with own private key
+- Issuing authority sends credential information to verifier authority via rest api(```/credentials```) post call
+- Issuing authority generates a qr code with credential info and sends it to driver 
+
+### Verification of credential
+
+Verification of credential can be via Open Source Verification Application or Internal Application. There are two verification methods.
+
+#### Online Verification
+
+This is default verification method. Flow is like below:
+
+- Verifier officer types credential identifier by using *universal verifier app* or *private app*
+- App makes an api call to get credential claims and status info(```/credentials/{credId}```).
+- App shows credential details.
+- Verifier can make an api call to change credential status 
+
+#### Offline Verification
+
+If there is network or server problem, verifier officer can use offline verification with scanning qr code and signature verification. This is a fallback mechanism. There is a drawback for the verification. Verifier can't know the current status of credential.
+
+#### Universal Verification Application
+
+If verifier wants to enable open source verifier app, should expose a config.json:   
 
 ```https://e-permit.gov.<country code>/config.json```
 
 ```json
 {
     "id": "ua",
-    "title": "Ukraine",
     "authorities": [
       {
         "id": "tr",
-        "title": "Republic Of Turkey",
         "keys": [
           {
             "kty": "EC",
@@ -42,22 +68,8 @@
   }
 ```
 
-### Issuing Credential
-
-- Issuing authority signs credential payload with own private key
-- Issuing authority sends credential information to verifier authority
-- Issuing authority generates a qr code with credential info for driver 
-
-### Verifying Credential
-
-- Verifier officer scans qr code or types credential identifier by using *universal verifier app* or *private app*)
-- For offline mode app verifies digital signature and shows result
-- For online mode app checks credential status by an api call and show result
-- App can send used credential request by api call 
-
-
-
 ### Fields
+
 | Code | Field | Description | Required | Format | Sample Value | 
 | ---- | ------| ----------- | -------- | ------ | ------------ | 
 | 1 | cy | Year of the permit | &#9745; | Year | 2020 |
@@ -74,18 +86,21 @@
 
 
 
+### Credential Details 
+
+Permit credential is a jws with permit claims. Classic jws format is like below:
+
+![w:1000](img/jws-format.png)
+
+Permit credential is like jws but adding extra version information as prefix:
+
+```{version}.{header}.{payload}.{signature}```
+
+For version 1 only ```ES256``` algorithm is supported.
 
 
 
-
-
-### QR Code with JWS(ES256) Content
-
-![w:1200](img/e-permit-cred-format.png)
-
-
-
-### Rest Api
+### Verifier Rest Apis
 
 - ```/credentials```: post a credential into verifier database by issuer(self contained auth) 
 - ```/credentials/{id}```: get a credential info and status by hash value 
@@ -97,6 +112,6 @@
 ## Demo
 
 - [Issuer Demo]( https://e-permit.github.io/demo/)
-- [Verifier Demo(camera is required)]( https://e-permit.github.io/verify/)
+- [Universal Verifier Application(camera is required)]( https://e-permit.github.io/verify/)
 
 
