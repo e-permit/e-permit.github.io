@@ -1,4 +1,4 @@
-# Electronic Permit System
+# Electronic Permit
 
 ## Legacy Permit Flow
 
@@ -68,7 +68,7 @@ If verifier wants to enable open source verifier app, should expose a config.jso
   }
 ```
 
-### Fields
+## Fields
 
 | Code | Field | Description | Required | Format | Sample Value | 
 | ---- | ------| ----------- | -------- | ------ | ------------ | 
@@ -86,7 +86,7 @@ If verifier wants to enable open source verifier app, should expose a config.jso
 
 
 
-### Credential Details 
+## Credential Details 
 
 Permit credential is a jws with permit claims. Classic jws format is like below:
 
@@ -100,7 +100,7 @@ For version 1 only ```ES256``` algorithm is supported.
 
 
 
-### Verifier Rest Apis
+## Verifier Rest Apis
 
 - ```/credentials```: post a credential into verifier database by issuer(self contained auth) 
 - ```/credentials/{id}```: get a credential info and status by hash value 
