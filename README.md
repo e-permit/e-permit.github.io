@@ -11,9 +11,10 @@ Electronic permit can be considered as common credential except some of its new 
 ![w:1000](https://miro.medium.com/max/619/0*QLb4tYr-R5foQkXT)
 
 During the adaptation of some of the concepts in the picture above, “issuer” and “verifier” can be named as the country, “subject” as the vehicle plate number and “holder” as the driver. However, with its features below, e-permit differs from the said life cycle :
-    • It is exchanged in a certain number (quota) between two countries through Protocols.
-    • The parties that deliver and receive the e-permit are known in advance of the exchange.
-    • Information about the usage (number of used/unused permits) of the permit is important for the countries (situation management).
+- It is exchanged in a certain number (quota) between two countries through Protocols.
+- The parties that deliver and receive the e-permit are known in advance of the exchange.
+- Information about the usage (number of used/unused permits) of the permit is important for the countries (situation management).
+
 Considering the above-mentioned characteristics; the e-permit has an authentic format, it is created by the issuing authority in an electronically portable way and signed electronically to be communicated through a safe channel to the verifier country. In this scenario, e-permit - with a portable/mobile signature- fulfills the safety conditions such as identity validation, integrity and undeniability. Besides all these, in the event of a connection problem, it ensures offline verification as well. To sum up, the e-permit should have the below features: 
 
 - Decentralized (P2P) Trust(Certificate Authority or Distributed Ledger is not required )
