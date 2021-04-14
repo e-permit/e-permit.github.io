@@ -23,6 +23,19 @@ Considering the above-mentioned characteristics; the e-permit has an authentic f
 - Secure(Non Repudiation, Authentication, Integrity)
 - Online/Offline Verification
 
+- P2P integration/trust
+- Secure(Non Repudiation, Authentication, Integrity)
+- Easy to integrate(Http)
+- Technology Independent(Http)
+- Offline capability
+
+- Identity Management
+- Secure Distributed Message
+- Key Management
+- Quota Management
+- Permit Management(properties, revocations, usage, qr code)
+
+
 ## Implementation
 
 ### Identity Management
