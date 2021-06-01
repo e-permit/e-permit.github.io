@@ -7,11 +7,8 @@ This draft text represents the arrangement of the specifications about the e-per
 
 ## Problem and Motivation
 
-Electronic permit can be considered as a common credential except some of its features. There is a specification study regarding the electronic management of a credential, which is called "Verifiable Credentials Data Model 1.0". Life cycle of the credential in the mentioned specificatoion is as follows:
+Electronic permit can be considered as a common credential except some of its features. 
 
-![w:1000](https://miro.medium.com/max/619/0*QLb4tYr-R5foQkXT)
-
-During the adaptation of some of the concepts in the picture above, “issuer” and “verifier” can be named as the country, “subject” as the vehicle and “holder” as the driver. However, with its features below, e-permit differs from the said life cycle :
 - It is exchanged in a certain number (quota) between two countries through protocols.
 - The parties that deliver and receive the e-permit are known in advance of the exchange.
 - Information about the usage (number of used/unused permits) of the permit is important for the countries (permit/quota management).
@@ -23,17 +20,7 @@ Considering the above-mentioned characteristics; the e-permit has an authentic f
 - Secure(Non Repudiation, Authentication, Integrity)
 - Online/Offline Verification
 
-- P2P integration/trust
-- Secure(Non Repudiation, Authentication, Integrity)
-- Easy to integrate(Http)
-- Technology Independent(Http)
-- Offline capability
-
-- Identity Management
-- Secure Distributed Message
-- Key Management
-- Quota Management
-- Permit Management(properties, revocations, usage, qr code)
+![w:1000](img/e-permit-flow.png)
 
 
 ## Implementation
@@ -43,60 +30,40 @@ Considering the above-mentioned characteristics; the e-permit has an authentic f
 Electronic identity management is needed in order to provide safe and undeniable (with digital signature) electronic communcition between two countries. In such scenarios where the parties are certainly known, the identity management can be performed with the below method easily.
 - Each country produces its own key pair.
 - Each country keeps the private key safely in its system for signing e-permit
-- The public key is sent to the other country for the verification of signature. Key sharing may be realized in written and original signed document during the arrangement of the Protocol between the countries.
+- The public key is sent to the other country for the verification of signature. 
 
-### Issuance
+### Quota Management
+
+### Issuing Permit
 
 The issuing country prepares/forms the credentials of the document in accordance with the e-permit format and signs it with its private key. Then, the country sends the portable electronic document to the corresponding country through web service. The newly formed document is also sent to the carrier for offline verification.
 
-### Verification
+### Permit Verification
 
 As the e-permit, under normal circumstances,  will be sent to the other party through web service, the verification will be done online as default. However, it can be realised offline in cases of network problems.
 
 #### Online Verification
 
-The information of the newly formed e-permit can be displayed and the e-signature can be verified as the verifier authority enters the single number (hash of the permit).
+The information of the newly formed e-permit can be displayed and the e-signature can be verified as the verifier authority enters the single permit identifier.
 
 #### Offline Verification
 
-In case of a network problem, the e-permit that is given to the carrier as qr code, can be verified offline by using the “Verifier Application. Countries can either develop their own verifier applications or use the existing web system.( Universal Verifier Application (https://e-permit.github.io/verify)
+In case of a network problem, the e-permit that is given to the carrier as qr code, can be verified offline by using the “Verifier Application. Countries can either develop their own verifier applications or use the universal verifier web application.( Universal Verifier Application (https://e-permit.github.io/verify)
 
-### Flow
-
-![w:1000](https://raw.githubusercontent.com/e-permit/e-permit.github.io/master/img/e-permit-flow.png)
-
-### Claims of e-permit credential
-
-| Code | Field | Description | Required | Format | Sample Value | 
-| ---- | ------| ----------- | -------- | ------ | ------------ | 
-| 1 | py | Year of the permit | &#9745; | Year | 2020 |
-| 2 | exp |  Permit valid until | &#9745; | Unix Epoch Time | 1311281970 |
-| 3 | pid | Serial Number of the permit | &#9745; | Number | 1 |
-| 4 | iss | This permit issued by |  &#9745; | Country code | ua |
-| 5 | iat | This permit prepared on | &#9745; | Unix Epoch Time | 1311281970 |
-| 6 | cn | Name of the company | | Text(max 100) | Sample Org. |
-| 7 | cid | National ID of the company | &#9745; | Text | A101.. | 
-| 8 | sub | Plate number(s) | &#9745; | Text | 06BB2020 |
-| 9 | pt | Type of the permit | &#9745; | Enum[1,2,3] | "biliteral", "transit", "3rdcountry" |
-| 10 | res | Restrictions | | Text(max 100) | Sample res. |
-| 11 | aud | This permit issued for | &#9745; | Country code | tr |
-
-
-
-### Credential Format 
-
-An e-permit can be considered as a standardJWS format, apart from the version information. JWS format is shown below:
-
-![w:1000](https://raw.githubusercontent.com/e-permit/e-permit.github.io/master/img/jws-format.png)
-
-Format of the permit is created by the addition of version information to the JWS format:
-```{version}.{header}.{payload}.{signature}```
 
 ### Claims of e-permit offline credential
 
-```issuer#issued_for#permit_year#permit_type#serial_number#issued_at#expire_at#plate_number#company_name```
+| Code | Field | Description | Required | Format | Sample Value | 
+| ---- | ------| ----------- | -------- | ------ | ------------ | 
+| 1 | exp |  Permit valid until | &#9745; | dd/MM/yyyy | 31/01/2022 |
+| 2 | id | Permit identifier | &#9745; | ISSUER-VERIFIER-YEAR-TYPE-SERIALNUMBER | TR-UZ-2021-1-1 |
+| 3 | iat | This permit prepared on | &#9745; | dd/MM/yyyy | 10/01/2021 |
+| 4 | cn | Name of the company | | Text(max 100) | Sample Org. |
+| 5 | pn | Plate number(s) | &#9745; | Text | 06AA1234 |
 
-### Claims of e-permit credential
+
+
+### Claims of e-permit credential(through web services)
 
 | Code | Field | Description | Required | Format | Sample Value | 
 | ---- | ------| ----------- | -------- | ------ | ------------ | 
@@ -106,17 +73,57 @@ Format of the permit is created by the addition of version information to the JW
 | 4 | issuer | This permit issued by |  &#9745; | Country code | ua |
 | 5 | issued_at | This permit prepared on | &#9745; | Unix Epoch Time | 1311281970 |
 | 6 | company_name | Name of the company | | Text(max 100) | Sample Org. |
-| 7 | company_id | National ID of the company | &#9745; | Text | A101.. | 
 | 8 | plate_number | Plate number(s) | &#9745; | Text | 06BB2020 |
 | 9 | permit_type | Type of the permit | &#9745; | Enum[1,2,3] | "biliteral", "transit", "3rdcountry" |
-| 10 | restrictions | Restrictions | | Text(max 100) | Sample res. |
 | 11 | issued_for | This permit issued for | &#9745; | Country code | tr |
-| 11 | claims | Other claims | &#9745; | Key Value | {} |
+| 12 | claims | Other claims | &#9745; | Key Value | {} |
 
 ## Events
 
-- KEY_CREATED
-- QUOTA_CREATED
-- PERMIT_CREATED
-- PERMIT_REVOKED
-- PERMIT_USED
+All communication between parties 
+
+### Credential Format 
+
+An e-permit event can be considered as a standardJWS format, apart from the version information. JWS format is shown below:
+
+![w:1000](https://raw.githubusercontent.com/e-permit/e-permit.github.io/master/img/jws-format.png)
+
+Format of the permit is created by the addition of version information to the JWS format:
+```{version}.{header}.{payload}.{signature}```(version: 0 means demo)
+
+### KEY_CREATED
+
+- jwk: jwk content(kid, x, y, ...)
+
+### KEY_REVOKED
+
+- key_id: Id of the key(kid)
+- revoked_at: Revocation timestamp
+
+### QUOTA_CREATED
+
+- permit_year:
+- permit_tpe:
+- start_number: 
+- end_number:
+### PERMIT_CREATED
+
+- permit_id
+- permit_year
+- permit_type
+- serial_number
+- issued_at
+- expire_at
+- company_name
+- plate_number
+- claims
+
+### PERMIT_REVOKED
+
+- permit_id
+
+### PERMIT_USED
+
+- permit_id:
+- activity_type:
+- activity_timestamp
