@@ -64,7 +64,8 @@ The information of the newly formed e-permit can be displayed and the e-signatur
 #### Offline Verification
 
 In case of a network problem, the e-permit that is given to the carrier as qr code, can be verified offline by using the “Verifier Application. Countries can either develop their own verifier applications or use the universal verifier web application.( Universal Verifier Application (https://e-permit.github.io/verify)
-
+Format of the permit is created by the addition of version information to the JWS format:
+```{version}.{header}.{payload}.{signature}```(version: 0 means demo)
 
 ### Claims of e-permit offline credential
 
@@ -81,14 +82,11 @@ In case of a network problem, the e-permit that is given to the carrier as qr co
 
 All communication between parties 
 
-### Credential Format 
+### Event Format 
 
 An e-permit event can be considered as a standardJWS format, apart from the version information. JWS format is shown below:
 
 ![w:1000](https://raw.githubusercontent.com/e-permit/e-permit.github.io/master/img/jws-format.png)
-
-Format of the permit is created by the addition of version information to the JWS format:
-```{version}.{header}.{payload}.{signature}```(version: 0 means demo)
 
 ### KEY_CREATED
 
