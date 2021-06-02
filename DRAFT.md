@@ -55,7 +55,7 @@ The information of the newly formed e-permit can be displayed and the e-signatur
 | 3 | serial_number | Serial Number of the permit | &#9745; | Number | 1 |
 | 4 | issuer | This permit issued by |  &#9745; | Country code | ua |
 | 5 | issued_at | This permit prepared on | &#9745; | Unix Epoch Time | 1311281970 |
-| 6 | company_name | Name of the company | | Text(max 100) | Sample Org. |
+| 6 | company_name | Name of the company |&#9745; | Text(max 100) | Sample Org. |
 | 8 | plate_number | Plate number(s) | &#9745; | Text | 06BB2020 |
 | 9 | permit_type | Type of the permit | &#9745; | Enum[1,2,3] | "biliteral", "transit", "3rdcountry" |
 | 11 | issued_for | This permit issued for | &#9745; | Country code | tr |
