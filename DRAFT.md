@@ -46,6 +46,21 @@ As the e-permit, under normal circumstances,  will be sent to the other party th
 
 The information of the newly formed e-permit can be displayed and the e-signature can be verified as the verifier authority enters the single permit identifier.
 
+### Claims of e-permit credential(through web services)
+
+| Code | Field | Description | Required | Format | Sample Value | 
+| ---- | ------| ----------- | -------- | ------ | ------------ | 
+| 1 | permit_year | Year of the permit | &#9745; | Year | 2020 |
+| 2 | expire_at |  Permit valid until | &#9745; | Unix Epoch Time | 1311281970 |
+| 3 | serial_number | Serial Number of the permit | &#9745; | Number | 1 |
+| 4 | issuer | This permit issued by |  &#9745; | Country code | ua |
+| 5 | issued_at | This permit prepared on | &#9745; | Unix Epoch Time | 1311281970 |
+| 6 | company_name | Name of the company | | Text(max 100) | Sample Org. |
+| 8 | plate_number | Plate number(s) | &#9745; | Text | 06BB2020 |
+| 9 | permit_type | Type of the permit | &#9745; | Enum[1,2,3] | "biliteral", "transit", "3rdcountry" |
+| 11 | issued_for | This permit issued for | &#9745; | Country code | tr |
+| 12 | claims | Other claims | &#9745; | Key Value | {} |
+
 #### Offline Verification
 
 In case of a network problem, the e-permit that is given to the carrier as qr code, can be verified offline by using the “Verifier Application. Countries can either develop their own verifier applications or use the universal verifier web application.( Universal Verifier Application (https://e-permit.github.io/verify)
@@ -61,22 +76,6 @@ In case of a network problem, the e-permit that is given to the carrier as qr co
 | 4 | cn | Name of the company | | Text(max 100) | Sample Org. |
 | 5 | pn | Plate number(s) | &#9745; | Text | 06AA1234 |
 
-
-
-### Claims of e-permit credential(through web services)
-
-| Code | Field | Description | Required | Format | Sample Value | 
-| ---- | ------| ----------- | -------- | ------ | ------------ | 
-| 1 | permit_year | Year of the permit | &#9745; | Year | 2020 |
-| 2 | expire_at |  Permit valid until | &#9745; | Unix Epoch Time | 1311281970 |
-| 3 | serial_number | Serial Number of the permit | &#9745; | Number | 1 |
-| 4 | issuer | This permit issued by |  &#9745; | Country code | ua |
-| 5 | issued_at | This permit prepared on | &#9745; | Unix Epoch Time | 1311281970 |
-| 6 | company_name | Name of the company | | Text(max 100) | Sample Org. |
-| 8 | plate_number | Plate number(s) | &#9745; | Text | 06BB2020 |
-| 9 | permit_type | Type of the permit | &#9745; | Enum[1,2,3] | "biliteral", "transit", "3rdcountry" |
-| 11 | issued_for | This permit issued for | &#9745; | Country code | tr |
-| 12 | claims | Other claims | &#9745; | Key Value | {} |
 
 ## Events
 
