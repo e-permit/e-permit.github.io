@@ -50,16 +50,19 @@ The information of the newly formed e-permit can be displayed and the e-signatur
 
 | Code | Field | Description | Required | Format | Sample Value | 
 | ---- | ------| ----------- | -------- | ------ | ------------ | 
-| 1 | permit_year | Year of the permit | &#9745; | Year | 2020 |
-| 2 | expire_at |  Permit valid until | &#9745; | dd/MM/yyyy | 31/01/2022 |
-| 3 | serial_number | Serial Number of the permit | &#9745; | Number | 1 |
-| 4 | issuer | This permit issued by |  &#9745; | Country code | ua |
-| 5 | issued_at | This permit prepared on | &#9745; | dd/MM/yyyy | 01/03/2021 |
-| 6 | company_name | Name of the company |&#9745; | Text(max 100) | Sample Org. |
-| 8 | plate_number | Plate number(s) | &#9745; | Text | 06BB2020 |
-| 9 | permit_type | Type of the permit | &#9745; | Enum[1,2,3] | "biliteral", "transit", "3rdcountry" |
-| 11 | issued_for | This permit issued for | &#9745; | Country code | tr |
-| 12 | claims | Other claims | &#9745; | Key Value | {} |
+
+| 1 | issuer | This permit issued by |  &#9745; | Country code | UZ |
+| 2 | issued_for | This permit issued for | &#9745; | Country code | TR |
+| 3 | permit_year | Year of the permit | &#9745; | Year | 2020 |
+| 4 | permit_type | Type of the permit | &#9745; | Enum[1,2,3] | "biliteral", "transit", "3rdcountry" |
+| 5 | serial_number | Serial Number of the permit | &#9745; | Number | 1 |
+| 6 | permit_identifier | Permit identifier | &#9745; | ISSUER-VERIFIER-YEAR-TYPE-SERIALNUMBER | UZ-TR-2021-1-1 |
+| 7 | issued_at | This permit prepared on | &#9745; | dd/MM/yyyy | 01/03/2021 |
+| 8 | expire_at |  Permit valid until | &#9745; | dd/MM/yyyy | 31/01/2022 |
+| 9 | company_name | Name of the company |&#9745; | Text(max 100) | Sample Org. |
+| 10 | company_id | Company identifier |&#9745; | Text | 123 |
+| 11 | plate_number | Plate number(s) | &#9745; | Text | 06BB1234 |
+| 12 | claims | Other claims | | Key Value | {} |
 
 #### Offline Verification
 
@@ -80,13 +83,27 @@ Format of the permit is created by the addition of version information to the JW
 
 ## Events
 
-All communication between parties 
+When an event has occured in a party(country):
 
-### Event Format 
+- Event payload is created
+- Payload is signed with private key of the party
+- Then signed event send through web service as authorization header
 
-An e-permit event can be considered as a standardJWS format, apart from the version information. JWS format is shown below:
+Event content can be considered as a standard JWS like below:
 
 ![w:1000](https://raw.githubusercontent.com/e-permit/e-permit.github.io/master/img/jws-format.png)
+
+Each event payload should contain below fields
+
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | event_id |  The unique identifier of event | Text(e.g. ABC123..) |
+| 2 | previous_event_id | Previous event identifier | Text(e.g. ABC123..) |
+| 3 | event_type | Event type | Enum[QUOTA_CREATED, PERMIT_USED, PERMIT_CREATED, PERMIT_REVOKED, KEY_CREATED, KEY_REVOKED] | 
+| 4 | event_timestamp | The UTC time of the event | Long(1625304893) |
+| 5 | issuer | Issuer country code(The hauliar country) | Two letter country code(e.g. TR, UZ, UA) |
+| 6 | issued_for | Verifier country code | Two letter country code(e.g. TR, UZ, UA)  |
+
 
 ### KEY_CREATED
 
