@@ -84,18 +84,55 @@ Format of the permit is created by the addition of version information to the JW
 
 Each country should implement below rest api resources to communicate with other countries
 
+
+### ```/epermit-configuration``` ```GET```
+
+When a country wants to add another country it uses this resource to retrieve information about the country. 
+Sample response:
+
+```
+{
+      "code": "TR",
+      "name": "Turkey",
+      "keys": [
+        {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "b-twdhMdnpLQJ_pQx8meWsvevCyD0sufkdgF9nIsX-U",
+          "y": "U339OypYc4efK_xKJqnGSgWbLQ--47sCfpu-pJU2620",
+          "use": "sig",
+          "kid": "1",
+          "alg": "ES256"
+        }
+      ]
+ }
+```
+
 ### ```/events``` ```GET```
 
-A country uses this resource when it wants to get messages. 
+A country uses this resource when it wants to get messages.
+
+#### Request
+
+Authorization Header: ```JWS(issuer, issued_for, last_event_id)```
+
+#### Response
+
+```
+[
+  "event-1 jws",
+  "event-2 jws"
+]
+```
+
 
 ### ```/events``` ```POST```
 
 A country uses this resource when it produces a message. 
 
+#### Request
 
-### ```/epermit-configuration``` ```GET```
-
- When a country wants to add another country it uses this resource to retrieve information about the country. 
+Authorization Header: ```JWS(issuer, issued_for, event_id, previous_event_id, event_type, event_timestamp ....)```
 
 > Below resource is optional
 
