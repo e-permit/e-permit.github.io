@@ -50,7 +50,6 @@ The information of the newly formed e-permit can be displayed and the e-signatur
 
 | Code | Field | Description | Required | Format | Sample Value | 
 | ---- | ------| ----------- | -------- | ------ | ------------ | 
-
 | 1 | issuer | This permit issued by |  &#9745; | Country code | UZ |
 | 2 | issued_for | This permit issued for | &#9745; | Country code | TR |
 | 3 | permit_year | Year of the permit | &#9745; | Year | 2020 |
@@ -59,7 +58,7 @@ The information of the newly formed e-permit can be displayed and the e-signatur
 | 6 | permit_identifier | Permit identifier | &#9745; | ISSUER-VERIFIER-YEAR-TYPE-SERIALNUMBER | UZ-TR-2021-1-1 |
 | 7 | issued_at | This permit prepared on | &#9745; | dd/MM/yyyy | 01/03/2021 |
 | 8 | expire_at |  Permit valid until | &#9745; | dd/MM/yyyy | 31/01/2022 |
-| 9 | company_name | Name of the company |&#9745; | Text(max 100) | Sample Org. |
+| 9 | company_name | Name of the company | &#9745; | Text(max 100) | Sample Org. |
 | 10 | company_id | Company identifier |&#9745; | Text | 123 |
 | 11 | plate_number | Plate number(s) | &#9745; | Text | 06BB1234 |
 | 12 | claims | Other claims | | Key Value | {} |
