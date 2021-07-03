@@ -167,37 +167,60 @@ Each event payload should contain below fields
 
 ### KEY_CREATED
 
-- jwk: jwk content(kid, x, y, ...)
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | kid |  Key identifier | Text(e.g. 2) |
+| 2 | kty | Key type | P-256 |
+| 3 | use | Usage | sig | 
+| 4 | crv | Curve | P-256 |
+| 5 | x | Public key y value | b-twdhMdnpLQJ_pQx8meWsvevCyD0sufkdgF9nIsX-U |
+| 6 | y | Public key x value | U339OypYc4efK_xKJqnGSgWbLQ--47sCfpu-pJU2620 |
+| 7 | alg | The jws algorithm | ES256 |
 
 ### KEY_REVOKED
 
-- key_id: Id of the key(kid)
-- revoked_at: Revocation timestamp
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | key_id |  Key identifier | Text(e.g. 2) |
+| 2 | revoked_at | The UTC time of revocation | Long(123444) |
+
 
 ### QUOTA_CREATED
 
-- permit_year:
-- permit_tpe:
-- start_number: 
-- end_number:
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | permit_year |  Year of the quota | 2021 |
+| 2 | permit_type | Permit type of the quota | BILITERAL |
+| 3 | start_number | Start number of the quota | 20 |
+| 4 | end_number | End number of the quota | 50 |
+
 ### PERMIT_CREATED
 
-- permit_id
-- permit_year
-- permit_type
-- serial_number
-- issued_at
-- expire_at
-- company_name
-- plate_number
-- claims
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
+| 2 | permit_year |  Year of the quota | 2021 |
+| 3 | permit_type | Permit type | BILITERAL |
+| 4 | serial_number |  Serial number of permit | 1 |
+| 5 | issued_at |  This permit prepared on | 03/03/2021 |
+| 6 | expire_at |  Permit valid until | 31/01/2022 |
+| 7 | company_name |  Year of the quota | ABC Company |
+| 8 | company_id |  Company identifier | 123 |
+| 9 | plate_number |  Plate Number(s) | 06TEST1234 |
+| 10 | claims |  Data | ```{"res": "The permit is restricted..."}``` |
 
 ### PERMIT_REVOKED
 
-- permit_id
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
 
 ### PERMIT_USED
 
-- permit_id:
-- activity_type:
-- activity_timestamp
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
+| 2 | activity_type |  Usage type | ENTERANCE-EXIT |
+| 3 | activity_timestamp | The UTC time of the activity  | Long |
+| 4 | activity_details |  Activity details(optional) | Text |
+
