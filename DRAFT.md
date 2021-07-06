@@ -144,8 +144,24 @@ Authorization Header:
 
 > JWS of event
 
-#### Request Output
+#### Response
 
+Success:
+
+```
+{
+   "ok": true
+}
+```
+
+Failure
+
+```
+{
+   "ok": false
+   "error_code": "PERMIT_EXIST"
+}
+```
 
 
 > Below resource is optional
