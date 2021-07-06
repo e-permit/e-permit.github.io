@@ -61,7 +61,7 @@ The information of the newly formed e-permit can be displayed and the e-signatur
 | 9 | company_name | Name of the company | &#9745; | Text(max 100) | Sample Org. |
 | 10 | company_id | Company identifier |&#9745; | Text | 123 |
 | 11 | plate_number | Plate number(s) | &#9745; | Text | 06BB1234 |
-| 12 | claims | Other claims | | Key Value | {} |
+| 12 | other_claims | Other claims | | Key Value | {} |
 
 #### Offline Verification
 
@@ -137,7 +137,7 @@ Sample event(PERMIT_CREATED)
    "company_name": "ABC",
    "company_id": "123",
    "plate_number": "06TEST",
-   "props": {"res": "test"}
+   "other_claims": {"res": "test"}
 }
 ```
 Authorization Header: 
@@ -221,7 +221,7 @@ Each event payload should contain below fields
 | 7 | company_name |  Year of the quota | ABC Company |
 | 8 | company_id |  Company identifier | 123 |
 | 9 | plate_number |  Plate Number(s) | 06TEST1234 |
-| 10 | props |  Optional Data | ```{"res": "The permit is restricted..."}``` |
+| 10 | other_claims |  Optional Data | ```{"res": "The permit is restricted..."}``` |
 
 ### PERMIT_REVOKED
 
