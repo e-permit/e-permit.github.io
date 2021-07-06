@@ -82,6 +82,16 @@ Format of the permit is created by the addition of version information to the JW
 
 ## Rest API Resources
 
+When an event message has occured in a party(country):
+
+- Event payload is created
+- Payload is signed with private key of the party
+- Then signed event is sended through web service as authorization header to verifier country
+
+The sended event can be considered as a standard JWS like below:
+
+![w:1000](https://raw.githubusercontent.com/e-permit/e-permit.github.io/master/img/jws-format.png)
+
 Each country should implement below rest api resources to communicate with other countries
 
 
@@ -171,17 +181,7 @@ Failure
 For offline verify. 
 
 
-## Messaging System
-
-When an event message has occured in a party(country):
-
-- Event payload is created
-- Payload is signed with private key of the party
-- Then signed event is sended through web service as authorization header to verifier country
-
-The sended event can be considered as a standard JWS like below:
-
-![w:1000](https://raw.githubusercontent.com/e-permit/e-permit.github.io/master/img/jws-format.png)
+## Events
 
 Each event payload should contain below fields
 
