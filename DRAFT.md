@@ -53,7 +53,7 @@ The information of the newly formed e-permit can be displayed and the e-signatur
 | 1 | issuer | This permit issued by |  &#9745; | Country code | UZ |
 | 2 | issued_for | This permit issued for | &#9745; | Country code | TR |
 | 3 | permit_year | Year of the permit | &#9745; | Year | 2020 |
-| 4 | permit_type | Type of the permit | &#9745; | Enum[1,2,3] | "biliteral", "transit", "3rdcountry" |
+| 4 | permit_type | Type of the permit | &#9745; | Enum[1,2,3,4,5,6] | "BILITERAL", "TRANSIT", "THIRDCOUNTRY","BILITERAL_FEE", "TRANSIT_FEE", "THIRDCOUNTRY_FEE"  |
 | 5 | serial_number | Serial Number of the permit | &#9745; | Number | 1 |
 | 6 | permit_identifier | Permit identifier | &#9745; | ISSUER-VERIFIER-YEAR-TYPE-SERIALNUMBER | UZ-TR-2021-1-1 |
 | 7 | issued_at | This permit prepared on | &#9745; | dd/MM/yyyy | 01/03/2021 |
@@ -108,31 +108,45 @@ Sample response:
  }
 ```
 
-### ```/events``` ```GET```
-
-A country uses this resource when it wants to get messages.
-
-#### Request
-
-Authorization Header: ```JWS(issuer, issued_for, last_event_id)```
-
-#### Response
-
-```
-[
-  "event-1 jws",
-  "event-2 jws"
-]
-```
-
 
 ### ```/events``` ```POST```
 
 A country uses this resource when it produces a message. 
 
-#### Request
+#### Request Input
 
-Authorization Header: ```JWS(issuer, issued_for, event_id, previous_event_id, event_type, event_timestamp ....)```
+**Claims**
+
+> Key value representaiton of event
+
+Sample event(PERMIT_CREATED)
+```
+{
+   "event_id": "1234..."
+   "previous_event_id": "0123....",
+   "event_type": "PERMIT_CREATED",
+   "event_timestamp": 123456
+   "issuer": "TR",
+   "issued_for": "UZ"
+   "permit_id": "TR-UZ-2021-1-1",
+   "permit_year": 2021,
+   "permit_type": "BILITERAL",
+   "serial_number": "1",
+   "issued_at": "03/02/2021",
+   "expire_at": "31/01/2022",
+   "company_name": "ABC",
+   "company_id": "123",
+   "plate_number": "06TEST",
+   "props": {"res": "test"}
+}
+```
+Authorization Header: 
+
+> JWS of event
+
+#### Request Output
+
+
 
 > Below resource is optional
 
@@ -207,7 +221,7 @@ Each event payload should contain below fields
 | 7 | company_name |  Year of the quota | ABC Company |
 | 8 | company_id |  Company identifier | 123 |
 | 9 | plate_number |  Plate Number(s) | 06TEST1234 |
-| 10 | claims |  Data | ```{"res": "The permit is restricted..."}``` |
+| 10 | props |  Optional Data | ```{"res": "The permit is restricted..."}``` |
 
 ### PERMIT_REVOKED
 
