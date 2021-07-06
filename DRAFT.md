@@ -174,13 +174,6 @@ Failure
 ```
 
 
-> Below resource is optional
-
-### ```/epermit-configuration/trusted_authorities``` ```GET``` 
-
-For offline verify. 
-
-
 ## Events
 
 Each event payload should contain below fields
