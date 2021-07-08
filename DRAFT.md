@@ -50,8 +50,8 @@ The information of the newly formed e-permit can be displayed and the e-signatur
 
 | Code | Field | Description | Required | Format | Sample Value | 
 | ---- | ------| ----------- | -------- | ------ | ------------ | 
-| 1 | issuer | This permit issued by |  &#9745; | Country code | UZ |
-| 2 | issued_for | This permit issued for | &#9745; | Country code | TR |
+| 1 | permit_issuer | This permit issued by |  &#9745; | Country code | UZ |
+| 2 | permit_issued_for | This permit issued for | &#9745; | Country code | TR |
 | 3 | permit_year | Year of the permit | &#9745; | Year | 2020 |
 | 4 | permit_type | Type of the permit | &#9745; | Enum[1,2,3,4,5,6] | "BILITERAL", "TRANSIT", "THIRDCOUNTRY","BILITERAL_FEE", "TRANSIT_FEE", "THIRDCOUNTRY_FEE"  |
 | 5 | serial_number | Serial Number of the permit | &#9745; | Number | 1 |
@@ -132,13 +132,15 @@ A country uses this resource when it produces a message.
 Sample event(PERMIT_CREATED)
 ```
 {
-   "event_id": "1234..."
+   "event_id": "1234...",
    "previous_event_id": "0123....",
    "event_type": "PERMIT_CREATED",
    "event_timestamp": 123456
-   "issuer": "TR",
-   "issued_for": "UZ"
+   "event_issuer": "TR",
+   "event_issued_for": "UZ",
    "permit_id": "TR-UZ-2021-1-1",
+   "permit_issuer": "TR",
+   "permit_issued_for": "UZ",
    "permit_year": 2021,
    "permit_type": "BILITERAL",
    "serial_number": "1",
@@ -184,8 +186,8 @@ Each event payload should contain below fields
 | 2 | previous_event_id | Previous event identifier | Text(e.g. ABC123..) |
 | 3 | event_type | Event type | Enum[QUOTA_CREATED, PERMIT_USED, PERMIT_CREATED, PERMIT_REVOKED, KEY_CREATED, KEY_REVOKED] | 
 | 4 | event_timestamp | The UTC time of the event | Long(1625304893) |
-| 5 | issuer | Issuer country code(The hauliar country) | Two letter country code(e.g. TR, UZ, UA) |
-| 6 | issued_for | Verifier country code | Two letter country code(e.g. TR, UZ, UA)  |
+| 5 | event_issuer | Event publisher| Two letter country code(e.g. TR, UZ, UA) |
+| 6 | event_issued_for | Event subscriber | Two letter country code(e.g. TR, UZ, UA)  |
 
 
 ### KEY_CREATED
@@ -212,6 +214,8 @@ Each event payload should contain below fields
 
 | No | Field | Description | Format | 
 | ---- | ------| ----------- | -------- | 
+| 1 | permit_issuer | Permit issuer for the quota | UZ |
+| 1 | permit_issued_for | Permit issued_for for the quota | TR |
 | 1 | permit_year |  Year of the quota | 2021 |
 | 2 | permit_type | Permit type of the quota | BILITERAL |
 | 3 | start_number | Start number of the quota | 20 |
@@ -222,6 +226,8 @@ Each event payload should contain below fields
 | No | Field | Description | Format | 
 | ---- | ------| ----------- | -------- | 
 | 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
+| 1 | permit_issuer | Permit issuer for the quota | UZ |
+| 1 | permit_issued_for | Permit issued_for for the quota | TR |
 | 2 | permit_year |  Year of the quota | 2021 |
 | 3 | permit_type | Permit type | BILITERAL |
 | 4 | serial_number |  Serial number of permit | 1 |
@@ -245,5 +251,5 @@ Each event payload should contain below fields
 | 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
 | 2 | activity_type |  Usage type | ENTERANCE-EXIT |
 | 3 | activity_timestamp | The UTC time of the activity  | Long |
-| 4 | activity_details |  Activity details(optional) | Text |
+| 4 | activity_details |  Activity details(optional) | Text(max 1000) |
 
