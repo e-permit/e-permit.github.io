@@ -118,16 +118,95 @@ Sample response:
  }
 ```
 
+### Events
 
-### ```/events``` ```POST```
+Each event should contain below fields
 
-A country uses this resource when it produces a message. 
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | event_id |  The unique identifier of event | Text(e.g. ABC123..) |
+| 2 | previous_event_id | Previous event identifier | Text(e.g. ABC123..) |
+| 3 | event_type | Event type | Enum[QUOTA_CREATED, PERMIT_USED, PERMIT_CREATED, PERMIT_REVOKED, KEY_CREATED, KEY_REVOKED] | 
+| 4 | event_timestamp | The UTC time of the event | Long(1625304893) |
+| 5 | event_issuer | Event publisher| Two letter country code(e.g. TR, UZ, UA) |
+| 6 | event_issued_for | Event subscriber | Two letter country code(e.g. TR, UZ, UA)  |
 
-#### Request Input
+#### ```/events/permit-created``` ```POST```
 
-**Claims**
+A country uses this resource when it creates a permit. 
 
-> Key value representaiton of event
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
+| 1 | permit_issuer | Permit issuer for the quota | UZ |
+| 1 | permit_issued_for | Permit issued_for for the quota | TR |
+| 2 | permit_year |  Year of the quota | 2021 |
+| 3 | permit_type | Permit type | BILITERAL |
+| 4 | serial_number |  Serial number of permit | 1 |
+| 5 | issued_at |  This permit prepared on | 03/03/2021 |
+| 6 | expire_at |  Permit valid until | 31/01/2022 |
+| 7 | company_name |  Year of the quota | ABC Company |
+| 8 | company_id |  Company identifier | 123 |
+| 9 | plate_number |  Plate Number(s) | 06TEST1234 |
+| 10 | other_claims |  Optional Data | ```{"res": "The permit is restricted..."}``` |
+
+#### ```/events/permit-revoked``` ```POST```
+
+A country uses this resource when it creates a permit. 
+
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
+
+#### ```/events/permit-used``` ```POST```
+
+A country uses this resource when it creates a permit.
+
+
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
+| 2 | activity_type |  Usage type | ENTERANCE-EXIT |
+| 3 | activity_timestamp | The UTC time of the activity  | Long |
+| 4 | activity_details |  Activity details(optional) | Text(max 1000) |
+
+#### ```/events/quota-created``` ```POST```
+
+A country uses this resource when it creates a permit. 
+
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | permit_issuer | Permit issuer for the quota | UZ |
+| 1 | permit_issued_for | Permit issued_for for the quota | TR |
+| 1 | permit_year |  Year of the quota | 2021 |
+| 2 | permit_type | Permit type of the quota | BILITERAL |
+| 3 | start_number | Start number of the quota | 20 |
+| 4 | end_number | End number of the quota | 50 |
+
+#### ```/events/key-created``` ```POST```
+
+A country uses this resource when it creates a permit. 
+
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | kid |  Key identifier | Text(e.g. 2) |
+| 2 | kty | Key type | P-256 |
+| 3 | use | Usage | sig | 
+| 4 | crv | Curve | P-256 |
+| 5 | x | Public key y value | b-twdhMdnpLQJ_pQx8meWsvevCyD0sufkdgF9nIsX-U |
+| 6 | y | Public key x value | U339OypYc4efK_xKJqnGSgWbLQ--47sCfpu-pJU2620 |
+| 7 | alg | The jws algorithm | ES256 |
+
+#### ```/events/key-revoked``` ```POST```
+
+A country uses this resource when it creates a permit. 
+
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | key_id |  Key identifier | Text(e.g. 2) |
+| 2 | revoked_at | The UTC time of revocation | Long(123444) |
+
+#### Sample Request Input
 
 Sample event(PERMIT_CREATED)
 ```
@@ -154,7 +233,7 @@ Sample event(PERMIT_CREATED)
 ```
 Authorization Header: 
 
-> JWS of event
+> JWS of event or Basic authentication value
 
 #### Response
 
@@ -176,80 +255,6 @@ Failure
 ```
 
 
-## Events
-
-Each event payload should contain below fields
-
-| No | Field | Description | Format | 
-| ---- | ------| ----------- | -------- | 
-| 1 | event_id |  The unique identifier of event | Text(e.g. ABC123..) |
-| 2 | previous_event_id | Previous event identifier | Text(e.g. ABC123..) |
-| 3 | event_type | Event type | Enum[QUOTA_CREATED, PERMIT_USED, PERMIT_CREATED, PERMIT_REVOKED, KEY_CREATED, KEY_REVOKED] | 
-| 4 | event_timestamp | The UTC time of the event | Long(1625304893) |
-| 5 | event_issuer | Event publisher| Two letter country code(e.g. TR, UZ, UA) |
-| 6 | event_issued_for | Event subscriber | Two letter country code(e.g. TR, UZ, UA)  |
 
 
-### KEY_CREATED
-
-| No | Field | Description | Format | 
-| ---- | ------| ----------- | -------- | 
-| 1 | kid |  Key identifier | Text(e.g. 2) |
-| 2 | kty | Key type | P-256 |
-| 3 | use | Usage | sig | 
-| 4 | crv | Curve | P-256 |
-| 5 | x | Public key y value | b-twdhMdnpLQJ_pQx8meWsvevCyD0sufkdgF9nIsX-U |
-| 6 | y | Public key x value | U339OypYc4efK_xKJqnGSgWbLQ--47sCfpu-pJU2620 |
-| 7 | alg | The jws algorithm | ES256 |
-
-### KEY_REVOKED
-
-| No | Field | Description | Format | 
-| ---- | ------| ----------- | -------- | 
-| 1 | key_id |  Key identifier | Text(e.g. 2) |
-| 2 | revoked_at | The UTC time of revocation | Long(123444) |
-
-
-### QUOTA_CREATED
-
-| No | Field | Description | Format | 
-| ---- | ------| ----------- | -------- | 
-| 1 | permit_issuer | Permit issuer for the quota | UZ |
-| 1 | permit_issued_for | Permit issued_for for the quota | TR |
-| 1 | permit_year |  Year of the quota | 2021 |
-| 2 | permit_type | Permit type of the quota | BILITERAL |
-| 3 | start_number | Start number of the quota | 20 |
-| 4 | end_number | End number of the quota | 50 |
-
-### PERMIT_CREATED
-
-| No | Field | Description | Format | 
-| ---- | ------| ----------- | -------- | 
-| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
-| 1 | permit_issuer | Permit issuer for the quota | UZ |
-| 1 | permit_issued_for | Permit issued_for for the quota | TR |
-| 2 | permit_year |  Year of the quota | 2021 |
-| 3 | permit_type | Permit type | BILITERAL |
-| 4 | serial_number |  Serial number of permit | 1 |
-| 5 | issued_at |  This permit prepared on | 03/03/2021 |
-| 6 | expire_at |  Permit valid until | 31/01/2022 |
-| 7 | company_name |  Year of the quota | ABC Company |
-| 8 | company_id |  Company identifier | 123 |
-| 9 | plate_number |  Plate Number(s) | 06TEST1234 |
-| 10 | other_claims |  Optional Data | ```{"res": "The permit is restricted..."}``` |
-
-### PERMIT_REVOKED
-
-| No | Field | Description | Format | 
-| ---- | ------| ----------- | -------- | 
-| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
-
-### PERMIT_USED
-
-| No | Field | Description | Format | 
-| ---- | ------| ----------- | -------- | 
-| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
-| 2 | activity_type |  Usage type | ENTERANCE-EXIT |
-| 3 | activity_timestamp | The UTC time of the activity  | Long |
-| 4 | activity_details |  Activity details(optional) | Text(max 1000) |
 
