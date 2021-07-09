@@ -50,10 +50,10 @@ The information of the newly formed e-permit can be displayed and the e-signatur
 
 | Code | Field | Description | Required | Format | Sample Value | 
 | ---- | ------| ----------- | -------- | ------ | ------------ | 
-| 1 | issuer | This permit issued by |  &#9745; | Country code | UZ |
-| 2 | issued_for | This permit issued for | &#9745; | Country code | TR |
+| 1 | permit_issuer | This permit issued by |  &#9745; | Country code | UZ |
+| 2 | permit_issued_for | This permit issued for | &#9745; | Country code | TR |
 | 3 | permit_year | Year of the permit | &#9745; | Year | 2020 |
-| 4 | permit_type | Type of the permit | &#9745; | Enum[1,2,3] | "biliteral", "transit", "3rdcountry" |
+| 4 | permit_type | Type of the permit | &#9745; | Enum[1,2,3,4,5,6] | "BILITERAL", "TRANSIT", "THIRDCOUNTRY","BILITERAL_FEE", "TRANSIT_FEE", "THIRDCOUNTRY_FEE"  |
 | 5 | serial_number | Serial Number of the permit | &#9745; | Number | 1 |
 | 6 | permit_identifier | Permit identifier | &#9745; | ISSUER-VERIFIER-YEAR-TYPE-SERIALNUMBER | UZ-TR-2021-1-1 |
 | 7 | issued_at | This permit prepared on | &#9745; | dd/MM/yyyy | 01/03/2021 |
@@ -61,7 +61,7 @@ The information of the newly formed e-permit can be displayed and the e-signatur
 | 9 | company_name | Name of the company | &#9745; | Text(max 100) | Sample Org. |
 | 10 | company_id | Company identifier |&#9745; | Text | 123 |
 | 11 | plate_number | Plate number(s) | &#9745; | Text | 06BB1234 |
-| 12 | claims | Other claims | | Key Value | {} |
+| 12 | other_claims | Other claims | | Key Value | {} |
 
 #### Offline Verification
 
@@ -81,6 +81,16 @@ Format of the permit is created by the addition of version information to the JW
 
 
 ## Rest API Resources
+
+When an event message has occured in a party(country):
+
+- Event payload is created
+- Payload is signed with private key of the party
+- Then signed event is sended through web service as authorization header to verifier country
+
+The sended event can be considered as a standard JWS like below:
+
+![w:1000](https://raw.githubusercontent.com/e-permit/e-permit.github.io/master/img/jws-format.png)
 
 Each country should implement below rest api resources to communicate with other countries
 
@@ -108,52 +118,9 @@ Sample response:
  }
 ```
 
-### ```/events``` ```GET```
+### Events
 
-A country uses this resource when it wants to get messages.
-
-#### Request
-
-Authorization Header: ```JWS(issuer, issued_for, last_event_id)```
-
-#### Response
-
-```
-[
-  "event-1 jws",
-  "event-2 jws"
-]
-```
-
-
-### ```/events``` ```POST```
-
-A country uses this resource when it produces a message. 
-
-#### Request
-
-Authorization Header: ```JWS(issuer, issued_for, event_id, previous_event_id, event_type, event_timestamp ....)```
-
-> Below resource is optional
-
-### ```/epermit-configuration/trusted_authorities``` ```GET``` 
-
-For offline verify. 
-
-
-## Messaging System
-
-When an event message has occured in a party(country):
-
-- Event payload is created
-- Payload is signed with private key of the party
-- Then signed event is sended through web service as authorization header to verifier country
-
-The sended event can be considered as a standard JWS like below:
-
-![w:1000](https://raw.githubusercontent.com/e-permit/e-permit.github.io/master/img/jws-format.png)
-
-Each event payload should contain below fields
+Each event should contain below fields
 
 | No | Field | Description | Format | 
 | ---- | ------| ----------- | -------- | 
@@ -161,11 +128,64 @@ Each event payload should contain below fields
 | 2 | previous_event_id | Previous event identifier | Text(e.g. ABC123..) |
 | 3 | event_type | Event type | Enum[QUOTA_CREATED, PERMIT_USED, PERMIT_CREATED, PERMIT_REVOKED, KEY_CREATED, KEY_REVOKED] | 
 | 4 | event_timestamp | The UTC time of the event | Long(1625304893) |
-| 5 | issuer | Issuer country code(The hauliar country) | Two letter country code(e.g. TR, UZ, UA) |
-| 6 | issued_for | Verifier country code | Two letter country code(e.g. TR, UZ, UA)  |
+| 5 | event_issuer | Event publisher| Two letter country code(e.g. TR, UZ, UA) |
+| 6 | event_issued_for | Event subscriber | Two letter country code(e.g. TR, UZ, UA)  |
+
+#### ```/events/permit-created``` ```POST```
+
+A country uses this resource when it creates a permit. 
+
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
+| 1 | permit_issuer | Permit issuer for the quota | UZ |
+| 1 | permit_issued_for | Permit issued_for for the quota | TR |
+| 2 | permit_year |  Year of the quota | 2021 |
+| 3 | permit_type | Permit type | BILITERAL |
+| 4 | serial_number |  Serial number of permit | 1 |
+| 5 | issued_at |  This permit prepared on | 03/03/2021 |
+| 6 | expire_at |  Permit valid until | 31/01/2022 |
+| 7 | company_name |  Year of the quota | ABC Company |
+| 8 | company_id |  Company identifier | 123 |
+| 9 | plate_number |  Plate Number(s) | 06TEST1234 |
+| 10 | other_claims |  Optional Data | ```{"res": "The permit is restricted..."}``` |
+
+#### ```/events/permit-revoked``` ```POST```
+
+A country uses this resource when it creates a permit. 
+
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
+
+#### ```/events/permit-used``` ```POST```
+
+A country uses this resource when it creates a permit.
 
 
-### KEY_CREATED
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
+| 2 | activity_type |  Usage type | ENTERANCE-EXIT |
+| 3 | activity_timestamp | The UTC time of the activity  | Long |
+| 4 | activity_details |  Activity details(optional) | Text(max 1000) |
+
+#### ```/events/quota-created``` ```POST```
+
+A country uses this resource when it creates a permit. 
+
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | permit_issuer | Permit issuer for the quota | UZ |
+| 1 | permit_issued_for | Permit issued_for for the quota | TR |
+| 1 | permit_year |  Year of the quota | 2021 |
+| 2 | permit_type | Permit type of the quota | BILITERAL |
+| 3 | start_number | Start number of the quota | 20 |
+| 4 | end_number | End number of the quota | 50 |
+
+#### ```/events/key-created``` ```POST```
+
+A country uses this resource when it creates a permit. 
 
 | No | Field | Description | Format | 
 | ---- | ------| ----------- | -------- | 
@@ -177,50 +197,60 @@ Each event payload should contain below fields
 | 6 | y | Public key x value | U339OypYc4efK_xKJqnGSgWbLQ--47sCfpu-pJU2620 |
 | 7 | alg | The jws algorithm | ES256 |
 
-### KEY_REVOKED
+#### ```/events/key-revoked``` ```POST```
+
+A country uses this resource when it creates a permit. 
 
 | No | Field | Description | Format | 
 | ---- | ------| ----------- | -------- | 
 | 1 | key_id |  Key identifier | Text(e.g. 2) |
 | 2 | revoked_at | The UTC time of revocation | Long(123444) |
 
+#### Sample Request Input
 
-### QUOTA_CREATED
+Sample event(PERMIT_CREATED)
+```
+{
+   "event_id": "1234...",
+   "previous_event_id": "0123....",
+   "event_type": "PERMIT_CREATED",
+   "event_timestamp": 123456
+   "event_issuer": "TR",
+   "event_issued_for": "UZ",
+   "permit_id": "TR-UZ-2021-1-1",
+   "permit_issuer": "TR",
+   "permit_issued_for": "UZ",
+   "permit_year": 2021,
+   "permit_type": "BILITERAL",
+   "serial_number": "1",
+   "issued_at": "03/02/2021",
+   "expire_at": "31/01/2022",
+   "company_name": "ABC",
+   "company_id": "123",
+   "plate_number": "06TEST",
+   "other_claims": {"res": "test"}
+}
+```
+Authorization Header: 
 
-| No | Field | Description | Format | 
-| ---- | ------| ----------- | -------- | 
-| 1 | permit_year |  Year of the quota | 2021 |
-| 2 | permit_type | Permit type of the quota | BILITERAL |
-| 3 | start_number | Start number of the quota | 20 |
-| 4 | end_number | End number of the quota | 50 |
+> JWS of event or Basic authentication value
 
-### PERMIT_CREATED
+#### Response
 
-| No | Field | Description | Format | 
-| ---- | ------| ----------- | -------- | 
-| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
-| 2 | permit_year |  Year of the quota | 2021 |
-| 3 | permit_type | Permit type | BILITERAL |
-| 4 | serial_number |  Serial number of permit | 1 |
-| 5 | issued_at |  This permit prepared on | 03/03/2021 |
-| 6 | expire_at |  Permit valid until | 31/01/2022 |
-| 7 | company_name |  Year of the quota | ABC Company |
-| 8 | company_id |  Company identifier | 123 |
-| 9 | plate_number |  Plate Number(s) | 06TEST1234 |
-| 10 | claims |  Data | ```{"res": "The permit is restricted..."}``` |
+Success:
 
-### PERMIT_REVOKED
+```
+{
+   "ok": true
+}
+```
 
-| No | Field | Description | Format | 
-| ---- | ------| ----------- | -------- | 
-| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
+Failure
 
-### PERMIT_USED
-
-| No | Field | Description | Format | 
-| ---- | ------| ----------- | -------- | 
-| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
-| 2 | activity_type |  Usage type | ENTERANCE-EXIT |
-| 3 | activity_timestamp | The UTC time of the activity  | Long |
-| 4 | activity_details |  Activity details(optional) | Text |
+```
+{
+   "ok": false
+   "error_code": "PERMIT_EXIST"
+}
+```
 
