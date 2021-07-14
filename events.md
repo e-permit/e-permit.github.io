@@ -29,7 +29,7 @@ Bu amaçla ```previous_event_id``` alanı kullanılmaktadır. İlk olay için bu
 ```POST``` ```/events/quota-created``` 
 
 Bir ülke, karşı ülke taşımacıları için belli aralıklarda seri numarası kotası tanımlayabilmelidir. Bu işlem kota tanımlaması olarak adlandırılır.
-Böylelikle karşı ülke, tanımlanan kota aralığında taşımacısı için permit üretebilecektir. Bu olayın alanları aşağıdadır
+Böylelikle karşı ülke, tanımlanan kota aralığında taşımacısı için permit üretebilecektir. Bu olay aşağıdaki alanları içerir 
 
 | No | Field | Description | Format | 
 | ---- | ------| ----------- | -------- | 
@@ -53,7 +53,7 @@ Böylelikle karşı ülke, tanımlanan kota aralığında taşımacısı için p
 
 ```POST``` ```/events/permit-created``` 
 
-Bir ülke kendi taşımacısı için bir permit belgesi ürettiğinde bunu karşı ülkeye göndermelidir. Bu amaç için PERMIT_CREATED olayı kullanılır.  Bu olayın alanları aşağıdadır 
+Bir ülke kendi taşımacısı için bir permit belgesi ürettiğinde bunu karşı ülkeye göndermelidir. Bu amaç için PERMIT_CREATED olayı kullanılır.  Bu olay aşağıdaki alanları içerir  
 
 | No | Field | Description | Details | 
 | ---- | ------| ----------- | -------- | 
@@ -70,51 +70,26 @@ Bir ülke kendi taşımacısı için bir permit belgesi ürettiğinde bunu karş
 | 9 | plate_number |  Plate Number(s) | 06TEST1234 |
 | 10 | other_claims |  Optional Data | ```{"res": "The permit is restricted..."}``` |
 
-#### ```/events/permit-revoked``` ```POST```
+#### PERMIT_REVOKED
 
-A country uses this resource when it creates a permit. 
+```POST``` ```/events/permit-revoked``` 
 
-| No | Field | Description | Format | 
-| ---- | ------| ----------- | -------- | 
-| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
-
-#### ```/events/permit-used``` ```POST```
-
-A country uses this resource when it creates a permit.
-
+Bir ülke kendi taşımacısı için düzenlediği permit belgesini iptal etmek isterse bu olayı kullanmalıdır. Bu olay aşağıdaki alanları içerir 
 
 | No | Field | Description | Format | 
 | ---- | ------| ----------- | -------- | 
 | 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
-| 2 | activity_type |  Usage type | ENTERANCE-EXIT |
+
+#### PERMIT_USED
+
+```POST``` ```/events/permit-used``` 
+
+Bir ülke, karşı ülkenin taşımacısı giriş veya çıkış yaptığında bu olayı kullanmalıdır.
+
+
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
+| 2 | activity_type |  Activity type | ENTERANCE-EXIT |
 | 3 | activity_timestamp | The UTC time of the activity  | Long |
 | 4 | activity_details |  Activity details(optional) | Text(max 1000) |
-
-#### ```/events/quota-created``` ```POST```
-
-A country uses this resource when it creates a permit. 
-
-
-
-#### ```/events/key-created``` ```POST```
-
-A country uses this resource when it creates a permit. 
-
-| No | Field | Description | Format | 
-| ---- | ------| ----------- | -------- | 
-| 1 | kid |  Key identifier | Text(e.g. 2) |
-| 2 | kty | Key type | P-256 |
-| 3 | use | Usage | sig | 
-| 4 | crv | Curve | P-256 |
-| 5 | x | Public key y value | b-twdhMdnpLQJ_pQx8meWsvevCyD0sufkdgF9nIsX-U |
-| 6 | y | Public key x value | U339OypYc4efK_xKJqnGSgWbLQ--47sCfpu-pJU2620 |
-| 7 | alg | The jws algorithm | ES256 |
-
-#### ```/events/key-revoked``` ```POST```
-
-A country uses this resource when it creates a permit. 
-
-| No | Field | Description | Format | 
-| ---- | ------| ----------- | -------- | 
-| 1 | key_id |  Key identifier | Text(e.g. 2) |
-| 2 | revoked_at | The UTC time of revocation | Long(123444) |
