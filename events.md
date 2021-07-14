@@ -53,7 +53,7 @@ Böylelikle karşı ülke, tanımlanan kota aralığında taşımacısı için p
 
 ```POST``` ```/events/permit-created``` 
 
-Bir ülke kendi taşımacısı için bir permit belgesi ürettiğinde bunu karşı ülkeye göndermelidir. Bu amaç için PERMIT_CREATED olayı kullanılır.  
+Bir ülke kendi taşımacısı için bir permit belgesi ürettiğinde bunu karşı ülkeye göndermelidir. Bu amaç için PERMIT_CREATED olayı kullanılır.  Bu olayın alanları aşağıdadır 
 
 | No | Field | Description | Details | 
 | ---- | ------| ----------- | -------- | 
