@@ -24,7 +24,9 @@ Her olay ortak olarak belli alanları içermelidir. Bunlar
 İki ülke sistemindeki verilerin tutarlılığı için her olay kendinden bir önceki olaya işaret etmelidir. 
 Bu amaçla ```previous_event_id``` alanı kullanılmaktadır. İlk olay için bu değer ```0``` olmalıdır.
 
-#### QUOTA_CREATED
+#### QUOTA_CREATED 
+
+```POST``` ```/events/quota-created``` 
 
 Bir ülke, karşı ülke taşımacıları için belli aralıklarda seri numarası kotası tanımlayabilmelidir. Bu işlem kota tanımlaması olarak adlandırılır.
 Böylelikle karşı ülke, tanımlanan kota aralığında taşımacısı için permit üretebilecektir. Bu olayın alanları aşağıdadır
@@ -38,40 +40,27 @@ Böylelikle karşı ülke, tanımlanan kota aralığında taşımacısı için p
 | 5 | start_number | Start number of the quota | 20 |
 | 6 | end_number | End number of the quota | 50 |
 
-```PermitType``` alanı hangi türde permit üretilebileceğini belirtmektedir. 6 farklı permit türü bulunmaktadır
+```PermitType``` alanı hangi türde permit üretilebileceğini belirtmektedir. 6 farklı permit türü bulunmaktadır. FEE ile biten türler ücretli anlamına gelmektedir. Parantez içindeki nümerik değer türün sayısal kodunu ifade eder. Permit Id üretirken bu değer kullanılır.
 
-- BILITERAL
-- TRANSIT
-- THIRDCOUNTRY
-- BILITERAL_FEE
-- TRANSIT_FEE
-- THIRDCOUNTRY_FEE
+- BILITERAL(1)
+- TRANSIT(2)
+- THIRDCOUNTRY(3)
+- BILITERAL_FEE(4)
+- TRANSIT_FEE(5)
+- THIRDCOUNTRY_FEE(6)
 
+#### PERMIT_CREATED
 
+```POST``` ```/events/permit-created``` 
 
+Bir ülke kendi taşımacısı için bir permit belgesi ürettiğinde bunu karşı ülkeye göndermelidir. Bu amaç için PERMIT_CREATED olayı kullanılır.  
 
-
-
-When a party(country)
-- gives a quota permission
-- create or revoke a permit
-- receive a enterance-exit activity
-
-should send this information to counter party through web service.  There are at least 4 
-  Each event should contain below fields
-
-
-
-#### ```/events/permit-created``` ```POST```
-
-A country uses this resource when it creates a permit. 
-
-| No | Field | Description | Format | 
+| No | Field | Description | Details | 
 | ---- | ------| ----------- | -------- | 
-| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
-| 1 | permit_issuer | Permit issuer for the quota | UZ |
-| 1 | permit_issued_for | Permit issued_for for the quota | TR |
-| 2 | permit_year |  Year of the quota | 2021 |
+| 1 | permit_id |  Permit identifier | ```Format:``` [Issuer Country Code]-[Verifier Country Code]-[Permit Year]-[Permit Type Numeric Code]-[Permit Serial Number] e.g. TR-UZ-2021-1-1 |
+| 1 | permit_issuer | Permit issuer |  UZ |
+| 1 | permit_issued_for | Permit issued_for | TR |
+| 2 | permit_year |  Year of the permit | 2021 |
 | 3 | permit_type | Permit type | BILITERAL |
 | 4 | serial_number |  Serial number of permit | 1 |
 | 5 | issued_at |  This permit prepared on | 03/03/2021 |
