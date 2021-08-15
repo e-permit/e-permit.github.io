@@ -69,9 +69,20 @@ Format of the permit is created by the addition of version information to the JW
 
 ### Events
 
-When a country defines a quota, creates / cancels a permit or when a counterpart’s transport operator enters the country, these data will have to be sent to the counterpart. These data are named as “event”
+When a country defines a quota, creates / cancels a permit or when a counterpart’s transport operator enters the country, these data will have to be sent to the counterpart. These data are named as “event”. Each country which is integrated electronically should be able to create and send these events to the counterpart and process the events created by the counterpart.  
 
-### Identity Management
+Each event should contain certain fields. These fields are shown in the following table:
+
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | event_id |  The unique identifier of event | Text(e.g. ABC123..) |
+| 2 | previous_event_id | Previous event identifier | Text(e.g. ABC123..) |
+| 3 | event_type | Event type | Enum[KEY_CREATED, KEY_REVOKED, QUOTA_CREATED, PERMIT_USED, PERMIT_CREATED, PERMIT_REVOKED] | 
+| 4 | event_timestamp | The UTC time of the event | Long(1625304893) |
+| 5 | event_publisher | Event publisher | Two letter country code(e.g. TR, UZ, UA) |
+| 6 | event_subscriber | Event subscriber | Two letter country code(e.g. TR, UZ, UA)  |
+
+#### Identity Management
 
 Electronic identity management is needed in order to provide safe and undeniable (with digital signature) electronic communcition between two countries. In such scenarios where the parties are certainly known, the identity management can be performed with the below method easily.
 - Each country produces its own key pair.
@@ -100,6 +111,29 @@ Sample response:
       ]
  }
 ```
+
+#### ```/events/key-created``` ```POST```
+
+A country uses this resource when it creates a permit. 
+
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | kid |  Key identifier | Text(e.g. 2) |
+| 2 | kty | Key type | P-256 |
+| 3 | use | Usage | sig | 
+| 4 | crv | Curve | P-256 |
+| 5 | x | Public key y value | b-twdhMdnpLQJ_pQx8meWsvevCyD0sufkdgF9nIsX-U |
+| 6 | y | Public key x value | U339OypYc4efK_xKJqnGSgWbLQ--47sCfpu-pJU2620 |
+| 7 | alg | The jws algorithm | ES256 |
+
+#### ```/events/key-revoked``` ```POST```
+
+A country uses this resource when it creates a permit. 
+
+| No | Field | Description | Format | 
+| ---- | ------| ----------- | -------- | 
+| 1 | key_id |  Key identifier | Text(e.g. 2) |
+| 2 | revoked_at | The UTC time of revocation | Long(123444) |
 
 ### Quota Management
 
@@ -212,28 +246,7 @@ A country uses this resource when it creates a permit.
 | 3 | start_number | Start number of the quota | 20 |
 | 4 | end_number | End number of the quota | 50 |
 
-#### ```/events/key-created``` ```POST```
 
-A country uses this resource when it creates a permit. 
-
-| No | Field | Description | Format | 
-| ---- | ------| ----------- | -------- | 
-| 1 | kid |  Key identifier | Text(e.g. 2) |
-| 2 | kty | Key type | P-256 |
-| 3 | use | Usage | sig | 
-| 4 | crv | Curve | P-256 |
-| 5 | x | Public key y value | b-twdhMdnpLQJ_pQx8meWsvevCyD0sufkdgF9nIsX-U |
-| 6 | y | Public key x value | U339OypYc4efK_xKJqnGSgWbLQ--47sCfpu-pJU2620 |
-| 7 | alg | The jws algorithm | ES256 |
-
-#### ```/events/key-revoked``` ```POST```
-
-A country uses this resource when it creates a permit. 
-
-| No | Field | Description | Format | 
-| ---- | ------| ----------- | -------- | 
-| 1 | key_id |  Key identifier | Text(e.g. 2) |
-| 2 | revoked_at | The UTC time of revocation | Long(123444) |
 
 #### Sample Request Input
 
