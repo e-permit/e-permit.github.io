@@ -7,11 +7,13 @@ This draft text represents the arrangement of the specifications about the e-per
 
 ## Problem and Motivation
 
-Electronic permit can be considered as a common credential except some of its features. 
+Permit can be considered as a common credential except some of its features. 
 
 - It is exchanged in a certain number (quota) between two countries through protocols.
 - The parties that deliver and receive the e-permit are known in advance of the exchange.
-- Information about the usage (number of used/unused permits) of the permit is important for the countries (permit/quota management).
+- Information about the usage (number of used/unused permits) of the permit is important for the countries (permit quota/usage).
+
+![w:1000](img/e-permit-flow.png)
 
 Considering the above-mentioned characteristics; the e-permit has an authentic format, it is created by the issuing authority in an electronically portable way and signed electronically to be communicated through a safe channel to the verifier country. In this scenario, e-permit - with a portable/mobile signature- fulfills the safety conditions such as identity validation, integrity and undeniability. Besides all these, in the event of a connection problem, it ensures offline verification as well. To sum up, the e-permit should have the below features: 
 
@@ -20,23 +22,8 @@ Considering the above-mentioned characteristics; the e-permit has an authentic f
 - Secure(Non Repudiation, Authentication, Integrity)
 - Online/Offline Verification
 
-![w:1000](img/e-permit-flow.png)
-
 
 ## Implementation
-
-### Identity Management
-
-Electronic identity management is needed in order to provide safe and undeniable (with digital signature) electronic communcition between two countries. In such scenarios where the parties are certainly known, the identity management can be performed with the below method easily.
-- Each country produces its own key pair.
-- Each country keeps the private key safely in its system for signing e-permit
-- The public key is sent to the other country for the verification of signature. 
-
-### Quota Management
-
-### Issuing Permit
-
-The issuing country prepares/forms the credentials of the document in accordance with the e-permit format and signs it with its private key. Then, the country sends the portable electronic document to the corresponding country through web service. The newly formed document is also sent to the carrier for offline verification.
 
 ### Permit Verification
 
@@ -46,7 +33,7 @@ As the e-permit, under normal circumstances,  will be sent to the other party th
 
 The information of the newly formed e-permit can be displayed and the e-signature can be verified as the verifier authority enters the single permit identifier.
 
-### Claims of e-permit credential(through web services)
+#### Claims of e-permit credential(through web services)
 
 | Code | Field | Description | Required | Format | Sample Value | 
 | ---- | ------| ----------- | -------- | ------ | ------------ | 
@@ -69,7 +56,7 @@ In case of a network problem, the e-permit that is given to the carrier as qr co
 Format of the permit is created by the addition of version information to the JWS format:
 ```{version}.{header}.{payload}.{signature}```(version: 0 means demo)
 
-### Claims of e-permit offline credential
+#### Claims of e-permit offline credential
 
 | Code | Field | Description | Required | Format | Sample Value | 
 | ---- | ------| ----------- | -------- | ------ | ------------ | 
@@ -78,6 +65,48 @@ Format of the permit is created by the addition of version information to the JW
 | 3 | iat | This permit prepared on | &#9745; | dd/MM/yyyy | 10/01/2021 |
 | 4 | cn | Name of the company | | Text(max 100) | Sample Org. |
 | 5 | pn | Plate number(s) | &#9745; | Text | 06AA1234 |
+
+
+### Events
+
+When a country defines a quota, creates / cancels a permit or when a counterpart’s transport operator enters the country, these data will have to be sent to the counterpart. These data are named as “event”
+
+### Identity Management
+
+Electronic identity management is needed in order to provide safe and undeniable (with digital signature) electronic communcition between two countries. In such scenarios where the parties are certainly known, the identity management can be performed with the below method easily.
+- Each country produces its own key pair.
+- Each country keeps the private key safely in its system for signing e-permit
+- The public key is sent to the other country for the verification of signature.
+
+#### ```/epermit-configuration``` ```GET```
+
+When a country wants to add another country it uses this resource to retrieve information about the country. 
+Sample response:
+
+```
+{
+      "code": "TR",
+      "name": "Turkey",
+      "keys": [
+        {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "b-twdhMdnpLQJ_pQx8meWsvevCyD0sufkdgF9nIsX-U",
+          "y": "U339OypYc4efK_xKJqnGSgWbLQ--47sCfpu-pJU2620",
+          "use": "sig",
+          "kid": "1",
+          "alg": "ES256"
+        }
+      ]
+ }
+```
+
+### Quota Management
+
+### Issuing Permit
+
+The issuing country prepares/forms the credentials of the document in accordance with the e-permit format and signs it with its private key. Then, the country sends the portable electronic document to the corresponding country through web service. The newly formed document is also sent to the carrier for offline verification.
+
 
 
 ## Rest API Resources
