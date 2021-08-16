@@ -5,7 +5,7 @@
 Permit is a document that authorizes the vehicle in a transport operation to cross the border of the destination country. In the current system, this document (permit) is physically prepared/printed by destination country and delivered to the corresponding country in a certain number. Then the haulier country issues a permit credential for vehicle. Difficulties in the implementation of this system and the security issues required the digitalization of the permit.
 This draft text represents the arrangement of the specifications about the e-permit (digital permit).
 
-## Problem and Motivation
+## Problem and Solution
 
 Permit can be considered as a common credential except some of its features. 
 
@@ -15,12 +15,13 @@ Permit can be considered as a common credential except some of its features.
 
 ![w:1000](img/e-permit-flow.png)
 
-Considering the above-mentioned characteristics; the e-permit has an authentic format, it is created by the issuing authority in an electronically portable way and signed electronically to be communicated through a safe channel to the verifier country. In this scenario, e-permit - with a portable/mobile signature- fulfills the safety conditions such as identity validation, integrity and undeniability. Besides all these, in the event of a connection problem, it ensures offline verification as well. To sum up, the e-permit should have the below features: 
+Considering the above-mentioned characteristics; the permit has an authentic format, it is created by the issuing authority and signed for the verifier country in a certian number. In this scenario, e-permit solution should provide the safety conditions such as identity validation, integrity and undeniability. Besides all these, in the event of a connection problem, it ensures offline verification as well. To sum up, the e-permit should have the below features: 
 
 - Decentralized Trust
 - Extensible and easy integrate (HTTP)
 - Secure(Non Repudiation, Authentication, Integrity)
 - Online/Offline Verification
+- Fault Tolerance
 
 
 ## Implementation
@@ -114,7 +115,7 @@ Sample response:
 
 #### ```/events/key-created``` ```POST```
 
-A country uses this resource when it creates a permit. 
+A country uses this resource when it creates a key. 
 
 | No | Field | Description | Format | 
 | ---- | ------| ----------- | -------- | 
@@ -128,7 +129,7 @@ A country uses this resource when it creates a permit.
 
 #### ```/events/key-revoked``` ```POST```
 
-A country uses this resource when it creates a permit. 
+A country uses this resource when it revokes a key. 
 
 | No | Field | Description | Format | 
 | ---- | ------| ----------- | -------- | 
@@ -137,62 +138,22 @@ A country uses this resource when it creates a permit.
 
 ### Quota Management
 
-### Issuing Permit
+A country, should define serial number quotas in certain intervals for counterpart’s transport operators. This process is defined as quota description. By this way counterpart can produce permits for its own hauliers in the defined quota interval. This event contains the following fields.
 
-The issuing country prepares/forms the credentials of the document in accordance with the e-permit format and signs it with its private key. Then, the country sends the portable electronic document to the corresponding country through web service. The newly formed document is also sent to the carrier for offline verification.
+#### ```/events/quota-created``` ```POST```
 
-
-
-## Rest API Resources
-
-When an event message has occured in a party(country):
-
-- Event payload is created
-- Payload is signed with private key of the party
-- Then signed event is sended through web service as authorization header to verifier country
-
-The sended event can be considered as a standard JWS like below:
-
-![w:1000](https://raw.githubusercontent.com/e-permit/e-permit.github.io/master/img/jws-format.png)
-
-Each country should implement below rest api resources to communicate with other countries
-
-
-### ```/epermit-configuration``` ```GET```
-
-When a country wants to add another country it uses this resource to retrieve information about the country. 
-Sample response:
-
-```
-{
-      "code": "TR",
-      "name": "Turkey",
-      "keys": [
-        {
-          "kty": "EC",
-          "crv": "P-256",
-          "x": "b-twdhMdnpLQJ_pQx8meWsvevCyD0sufkdgF9nIsX-U",
-          "y": "U339OypYc4efK_xKJqnGSgWbLQ--47sCfpu-pJU2620",
-          "use": "sig",
-          "kid": "1",
-          "alg": "ES256"
-        }
-      ]
- }
-```
-
-### Events
-
-Each event should contain below fields
+A country uses this resource when it creates a permit. 
 
 | No | Field | Description | Format | 
 | ---- | ------| ----------- | -------- | 
-| 1 | event_id |  The unique identifier of event | Text(e.g. ABC123..) |
-| 2 | previous_event_id | Previous event identifier | Text(e.g. ABC123..) |
-| 3 | event_type | Event type | Enum[QUOTA_CREATED, PERMIT_USED, PERMIT_CREATED, PERMIT_REVOKED, KEY_CREATED, KEY_REVOKED] | 
-| 4 | event_timestamp | The UTC time of the event | Long(1625304893) |
-| 5 | event_issuer | Event publisher| Two letter country code(e.g. TR, UZ, UA) |
-| 6 | event_issued_for | Event subscriber | Two letter country code(e.g. TR, UZ, UA)  |
+| 1 | permit_issuer | Permit issuer for the quota | UZ |
+| 1 | permit_issued_for | Permit issued_for for the quota | TR |
+| 1 | permit_year |  Year of the quota | 2021 |
+| 2 | permit_type | Permit type of the quota | BILITERAL |
+| 3 | start_number | Start number of the quota | 20 |
+| 4 | end_number | End number of the quota | 50 |
+
+### Permit Management
 
 #### ```/events/permit-created``` ```POST```
 
@@ -233,70 +194,41 @@ A country uses this resource when it creates a permit.
 | 3 | activity_timestamp | The UTC time of the activity  | Long |
 | 4 | activity_details |  Activity details(optional) | Text(max 1000) |
 
-#### ```/events/quota-created``` ```POST```
 
-A country uses this resource when it creates a permit. 
+## Rest API Resources
 
-| No | Field | Description | Format | 
-| ---- | ------| ----------- | -------- | 
-| 1 | permit_issuer | Permit issuer for the quota | UZ |
-| 1 | permit_issued_for | Permit issued_for for the quota | TR |
-| 1 | permit_year |  Year of the quota | 2021 |
-| 2 | permit_type | Permit type of the quota | BILITERAL |
-| 3 | start_number | Start number of the quota | 20 |
-| 4 | end_number | End number of the quota | 50 |
+When an event message has occured in a party(country):
+
+- Event payload is created
+- Payload is signed with private key of the party
+- Then signed event is sended through web service as authorization header to verifier country
+
+The sended event can be considered as a standard JWS like below:
+
+![w:1000](https://raw.githubusercontent.com/e-permit/e-permit.github.io/master/img/jws-format.png)
+
+Each country should implement below rest api resources to communicate with other countries
 
 
+### ```/epermit-configuration``` ```GET```
 
-#### Sample Request Input
-
-Sample event(PERMIT_CREATED)
-```
-{
-   "event_id": "1234...",
-   "previous_event_id": "0123....",
-   "event_type": "PERMIT_CREATED",
-   "event_timestamp": 123456
-   "event_issuer": "TR",
-   "event_issued_for": "UZ",
-   "permit_id": "TR-UZ-2021-1-1",
-   "permit_issuer": "TR",
-   "permit_issued_for": "UZ",
-   "permit_year": 2021,
-   "permit_type": "BILITERAL",
-   "serial_number": "1",
-   "issued_at": "03/02/2021",
-   "expire_at": "31/01/2022",
-   "company_name": "ABC",
-   "company_id": "123",
-   "plate_number": "06TEST",
-   "other_claims": {"res": "test"}
-}
-```
-Authorization Header: 
-
-> JWS of event or Basic authentication value
-
-#### Response
-
-Success:
+When a country wants to add another country it uses this resource to retrieve information about the country. 
+Sample response:
 
 ```
 {
-   "ok": true
-}
+      "code": "TR",
+      "name": "Turkey",
+      "keys": [
+        {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "b-twdhMdnpLQJ_pQx8meWsvevCyD0sufkdgF9nIsX-U",
+          "y": "U339OypYc4efK_xKJqnGSgWbLQ--47sCfpu-pJU2620",
+          "use": "sig",
+          "kid": "1",
+          "alg": "ES256"
+        }
+      ]
+ }
 ```
-
-Failure
-
-```
-{
-   "ok": false
-   "error_code": "PERMIT_EXIST"
-}
-```
-
-
-
-
-
