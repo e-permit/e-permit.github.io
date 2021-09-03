@@ -81,7 +81,34 @@ Each event should contain certain fields. These fields are shown in the followin
 | 3 | event_type | Event type | Enum[KEY_CREATED, KEY_REVOKED, QUOTA_CREATED, PERMIT_USED, PERMIT_CREATED, PERMIT_REVOKED] | 
 | 4 | event_timestamp | The UTC time of the event | Long(1625304893) |
 | 5 | event_publisher | Event publisher | Two letter country code(e.g. TR, UZ, UA) |
-| 6 | event_subscriber | Event subscriber | Two letter country code(e.g. TR, UZ, UA)  |
+| 6 | event_consumer | Event consumer | Two letter country code(e.g. TR, UZ, UA)  |
+
+When an event is created producer country should send this event with an authorization header(JWS). Consumer party should send a response like below:
+
+- 401 for invalid jws
+- 400 for bad request
+- 200 for succeed 
+
+```
+{
+  "ok": false,
+  "error_code": "EVENT_ALREADY_EXISTS"
+}
+```
+
+#### Error Codes
+
+- EVENT_ALREADY_EXISTS,
+- PREVIOUS_EVENT_NOTFOUND,
+- GENESIS_EVENT_ALREADY_EXISTS,
+- KEYID_ALREADY_EXISTS,
+- KEY_NOTFOUND,
+- INSUFFICIENT_KEY,
+- INSUFFICIENT_PERMIT_QUOTA,
+- INVALID_QUOTA_INTERVAL,
+- PERMITID_ALREADY_EXISTS,
+- PERMIT_NOTFOUND,
+- INVALID_PERMITID;
 
 #### Identity Management
 
