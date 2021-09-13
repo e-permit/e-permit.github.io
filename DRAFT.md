@@ -140,6 +140,10 @@ Sample response:
  }
 ```
 
+#### Proof Implementation
+
+Events should contain a proof for secure communication between countries. This proof should be sended in ```Authorization``` header with ```Bearer ``` prefix. When a country produces an event, it should generate a `JWS` for the event. A JWS contains 3 parts(header, payload, signature). Payload is the event content in e-permit scenario. So it is sufficient to use header and signature as a proof. 
+
 #### ```/events/key-created``` ```POST```
 
 A country uses this resource when it creates a key. 
