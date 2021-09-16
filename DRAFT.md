@@ -140,9 +140,23 @@ Sample response:
  }
 ```
 
-#### Proof Implementation
+#### Generating Proof
 
-Events should contain a proof for secure communication between countries. This proof should be sended in ```Authorization``` header with ```Bearer ``` prefix. When a country produces an event, it should generate a `JWS` for the event. A JWS contains 3 parts(header, payload, signature). Payload is the event content in e-permit scenario. So it is sufficient to use header and signature as a proof. 
+Events should contain a proof for secure communication between countries. This proof should be sended in ```Authorization``` header with ```Bearer ``` prefix. When a country produces an event, it should generate a `JWS` for the event. A JWS contains 3 parts(header, payload, signature). Payload is the event content in e-permit scenario. So it is sufficient to use header and signature as a proof ```<header>.<signature>``` for events. The steps are like below:
+
+- Create an event
+- Generate a ```JWS``` with using event as payload
+- Generate a proof with using ```<header>.<signature>```
+- Add the proof in ```Authorization``` header with ```Bearer ``` prefix
+
+#### Verifying Proof
+
+When an events is received, verifier country should verify proof. Verifying can be implemented the below way:
+
+- Get ```Authorization``` header from the request. Sample: ```Bearer <proof>```
+- Omit the pure proof. 
+- Combine proof with payload. ```<header>.base64URL(<json payload>).<signature>```
+- Verify the generated ```JWS``` with the ```JOSE``` library
 
 #### ```/events/key-created``` ```POST```
 
