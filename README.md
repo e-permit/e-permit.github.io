@@ -239,3 +239,6 @@ A country uses this resource when it creates a permit.
 | 3 | activity_timestamp | The UTC time of the activity  | Long |
 | 4 | activity_details |  Activity details(optional) | Text(max 1000) |
 
+
+The sample java implementation repository is on the https://github.com/e-permit/e-permit-java
+
