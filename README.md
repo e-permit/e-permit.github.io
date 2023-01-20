@@ -15,58 +15,12 @@ Permit can be considered as a common credential except some of its features.
 
 ![w:1000](img/e-permit-flow.png)
 
-Considering the above-mentioned characteristics; the permit has an authentic format, it is created by the issuing authority and signed for the verifier country in a certian number. In this scenario, e-permit solution should provide the safety conditions such as identity validation, integrity and undeniability. Besides all these, in the event of a connection problem, it ensures offline verification as well. To sum up, the e-permit should have the below features: 
+Considering the above-mentioned characteristics; the permit has an authentic format, it is created by the issuing authority and signed for the verifier country in a certian number. In this scenario, e-permit solution uses a standard based on electronic data exchange with sealed data. According to this standard, each country must provide its own e-seal and web service for data exchange. The provided web service must be a REST API. A country must seal the message it wants to send with its own private key and send it through the service provided by the other country. The process begins with the mutual identification of the countries. Each country must share its e-seal public keys with the service provided. Once the countries have mutually identified each other, they will be able to exchange data. A sample scenario will be more illustrative for the following process.
 
-- Decentralized Trust
-- Extensible and easy integrate (HTTP)
-- Secure(Non Repudiation, Authentication, Integrity)
-- Online/Offline Verification
-- Fault Tolerance
+For example, let's consider the issuance of e-permits and sharing of entry-exit information for transport companies operating between Turkey and Uzbekistan. In this scenario, first, Uzbekistan needs to set quotas for Turkish transport companies. This process is detailed here. Turkey can then issue permits to its transport companies using the set quota. The permit information is sent to Uzbekistan using this service method. Turkey sends the transport company the permit document number and QR code. The transport company can then enter and exit Uzbekistan with the permit. These entries and exits are sent to the Turkish system by Uzbekistan using this method.
 
 
 ## Implementation
-
-### Permit Verification
-
-As the e-permit, under normal circumstances,  will be sent to the other party through web service, the verification will be done online as default. However, it can be realised offline in cases of network problems.
-
-#### Online Verification
-
-The information of the newly formed e-permit can be displayed and the e-signature can be verified as the verifier authority enters the single permit identifier.
-
-#### Claims of e-permit credential(through web services)
-
-| Code | Field | Description | Required | Format | Sample Value | 
-| ---- | ------| ----------- | -------- | ------ | ------------ | 
-| 1 | permit_issuer | This permit issued by |  &#9745; | Country code | UZ |
-| 2 | permit_issued_for | This permit issued for | &#9745; | Country code | TR |
-| 3 | permit_year | Year of the permit | &#9745; | Year | 2020 |
-| 4 | permit_type | Type of the permit | &#9745; | Enum[1,2,3,4,5,6] | "BILITERAL", "TRANSIT", "THIRDCOUNTRY","BILITERAL_FEE", "TRANSIT_FEE", "THIRDCOUNTRY_FEE"  |
-| 5 | serial_number | Serial Number of the permit | &#9745; | Number | 1 |
-| 6 | permit_identifier | Permit identifier | &#9745; | ISSUER-VERIFIER-YEAR-TYPE-SERIALNUMBER | UZ-TR-2021-1-1 |
-| 7 | issued_at | This permit prepared on | &#9745; | dd/MM/yyyy | 01/03/2021 |
-| 8 | expire_at |  Permit valid until | &#9745; | dd/MM/yyyy | 31/01/2022 |
-| 9 | company_name | Name of the company | &#9745; | Text(max 100) | Sample Org. |
-| 10 | company_id | Company identifier |&#9745; | Text | 123 |
-| 11 | plate_number | Plate number(s) | &#9745; | Text | 06BB1234 |
-| 12 | other_claims | Other claims | | Key Value | {} |
-
-#### Offline Verification
-
-In case of a network problem, the e-permit that is given to the carrier as qr code, can be verified offline by using the “Verifier Application. Countries can either develop their own verifier applications or use the universal verifier web application.( Universal Verifier Application (https://e-permit.github.io/verify)
-Format of the permit is created by the addition of version information to the JWS format:
-```{version}.{header}.{payload}.{signature}```(version: 0 means demo)
-
-#### Claims of e-permit offline credential
-
-| Code | Field | Description | Required | Format | Sample Value | 
-| ---- | ------| ----------- | -------- | ------ | ------------ | 
-| 1 | exp |  Permit valid until | &#9745; | dd/MM/yyyy | 31/01/2022 |
-| 2 | id | Permit identifier | &#9745; | ISSUER-VERIFIER-YEAR-TYPE-SERIALNUMBER | TR-UZ-2021-1-1 |
-| 3 | iat | This permit prepared on | &#9745; | dd/MM/yyyy | 10/01/2021 |
-| 4 | cn | Name of the company | | Text(max 100) | Sample Org. |
-| 5 | pn | Plate number(s) | &#9745; | Text | 06AA1234 |
-
 
 ### Events
 
