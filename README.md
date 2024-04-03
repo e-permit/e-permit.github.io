@@ -158,7 +158,7 @@ A country uses this resource when it creates a permit.
 
 A country uses this resource when it creates a permit. 
 
-| No | Field | Description | Format | 
+| No | Field | Description | Example | 
 | ---- | ------| ----------- | -------- | 
 | 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
 | 1 | permit_issuer | Permit issuer for the quota | UZ |
@@ -168,8 +168,8 @@ A country uses this resource when it creates a permit.
 | 4 | serial_number |  Serial number of permit | 1 |
 | 5 | issued_at |  This permit prepared on | 03/03/2021 |
 | 6 | expire_at |  Permit valid until | 31/01/2022 |
-| 7 | company_name |  Year of the quota | ABC Company |
-| 8 | company_id |  Company identifier | 123 |
+| 7 | company_name |  Company name | ABC Company |
+| 8 | company_id |  Company identifier | e.g. 123 |
 | 9 | plate_number |  Plate Number(s) | 06TEST1234 |
 | 10 | other_claims |  Optional Data | ```{"res": "The permit is restricted..."}``` |
 
