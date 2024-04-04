@@ -158,20 +158,21 @@ A country uses this resource when it creates a permit.
 
 A country uses this resource when it creates a permit. 
 
-| No | Field | Description | Example | 
+| | Field Code | Description | Example | 
 | ---- | ------| ----------- | -------- | 
-| 1 | permit_id |  Permit identifier | TR-UZ-2021-1-1 |
-| 1 | permit_issuer | Permit issuer for the quota | UZ |
-| 1 | permit_issued_for | Permit issued_for for the quota | TR |
-| 2 | permit_year |  Year of the quota | 2021 |
-| 3 | permit_type | Permit type | BILITERAL |
-| 4 | serial_number |  Serial number of permit | 1 |
-| 5 | issued_at |  This permit prepared on | 03/03/2021 |
-| 6 | expire_at |  Permit valid until | 31/01/2022 |
-| 7 | company_name |  Company name | ABC Company |
-| 8 | company_id |  Company identifier | e.g. 123 |
-| 9 | plate_number |  Plate Number(s) | 06TEST1234 |
-| 10 | other_claims |  Optional Data | ```{"res": "The permit is restricted..."}``` |
+| (1) | permit_id |  PERMIT SERIAL NUMBER | TR-UZ-2021-1-1 |
+| (2) | permit_type | TYPE OF THE PERMIT | BILITERAL |
+| (3) | permit_year |  YEAR OF THE PERMIT | 2021 |
+| (4) | permit_issuer | PERMIT ISSUED BY | TR |
+| (5) | permit_issued_for | PERMIT ISSUED FOR | UZ |
+| (6) | plate_number |  PLATE NUMBER(S) | 06TEST1234 |
+| (7) | issued_at |  PERMIT PREPARED ON | 03/03/2021 |
+| (8) | expire_at |  PERMIT VALID UNTIL | 31/01/2022 |
+| (9) | company_name |  NAME OF THE COMPANY | e.g. ABC Company |
+| (10) | company_id |  ID OF THE COMPANY | e.g. 123 |
+| (11) | departure_country |  DEPARTURE COUNTRY | e.g. TR |
+| (12) | arrival_country |   ARRIVAL COUNTRY | e.g. TR |
+| (13) | other_claims |  OTHER INFORMATION/RESTRICTIONS | ```{"res": "The permit is restricted..."}``` |
 
 #### ```/events/permit-revoked``` ```POST```
 
