@@ -30,35 +30,35 @@ Public api  işlevleri:
 https://disapi.uab.gov.tr/apigateway/e-permit/epermit-configuration
 
 2.	QR kod ile düzenlenen elektronik geçiş belgesinin düzenleyen ülke public apisi ile doğrulanması.
-/epermit-verify/{QR Code}
+`/epermit-verify/{QR Code}`
 
 3.	Diğer ülkeler tarafından  gönderilen permit ve kota taleplerini karşılamak. Bu işlevler karşı ülkenin internal apisi tarafından kullanılmaktadır.
 
 İşlev tanımları:
-/events/key-created
+`/events/key-created`
 
 Üretilen public keyi karşı ülkeye sunma bu metotla yapılır.
-/events/key-revoked
+`/events/key-revoked`
 
 İptal edilen public keyi karşı ülkeye sunma bu metotla yapılır.
-/events/quota-created
+`/events/quota-created`
 
 Karşı ülkeye permit düzenlemesi için kota tanımlama işlemi bu metod ile yapılır.
 
 Örnek olarak Türkiye Özbekistana bir kota tanımı yaptığında Türkiye Özbekistan public apisinin  kota bilgilerini bu metoda gönderir.
 
-/events/permit-created
+`/events/permit-created`
 
 Düzenlenen permiti karşı ülkeye gönderme işlemini yapar.
 
 Örnek olarak Türkiye Özbekistanın tanımladığı kotadan kendi ülkesinin taşıtı için bir izin düzenlediğinde Özbekistan public apisinin bu metoduna  permit bilgilerini gönderir.
-/events/permit-revoked
+`/events/permit-revoked`
 
 İptal edilen permiti karşı ülkeye gönderme işlemini yapar.
 
 Örnek olarak Türkiye Özbekistanın tanımladığı kotadan kendi ülkesinin taşıtı için bir izin düzenlediğinde permit used bilgisini göndermeden ilgili iznin iptalini yapıp yeni izin düzenleyebilir. İptali yapılan permit bilgisi Özbekistan public apisinin bu metoduna  gönderilir.
 
-/events/permit-used
+`/events/permit-used`
 
 Düzenlenen permitin karşı ülkeye kontrol noktalarından(sınır kapılarından) kullanımı bilgisinin (Giriş ve Çıkış) gönderimini yapar. 
 
@@ -71,8 +71,8 @@ Taraf ülkelerin kendi sistemleri tarafından kullanılması için oluşturulan 
 Kota ve permit işlemlerinin karşı ülkenin public apisi ile entegre biçimde yönetilebileceği internal api uygulamasıda open source olarak yayımlanmıştır. 
 Docker image adresi: ghcr.io/e-permit/internalapi:latest
 
-Örnek ortam değişkeleri:
-
+### Örnek ortam değişkeleri:
+```env
 SPRING_PROFILES_ACTIVE=dev
 HIBERNATE_DDL_AUTO=none
 FLYWAY_ENABLED=true
@@ -86,9 +86,8 @@ EPERMIT_ISSUER_CODE=<Country code>
 EPERMIT_ISSUER_NAME=<Country name>
 EPERMIT_ADMIN_PASSWORD=<admin pwd>
 EPERMIT_KEY_PASSWORD=<admin pwd for encrypting key>
-# Optional(if you use docker compose you can mount host volume to container volume )
 EPERMIT_LOG_BASEPATH=<log base path e.g /var/log/epermit> 
-
+```
 
 Örneğin Türkiye olarak open source public api yanında internal apiyide kullanıyoruz. Kendi iç süreçlerimizdeki diğer uygulamaları(e-devlet, unet, gebos ,gümrük servisi…vb ) direkt karşı ülkenin public apisini kullanmak yerine arada Proxy olarak internal api üzerinden e-permit sistemine entegre ederek daha sürdürülebilir bir şekilde entegrasyonlarımızı sağladık.
 
@@ -97,28 +96,36 @@ EPERMIT_LOG_BASEPATH=<log base path e.g /var/log/epermit>
 El sıkışma (ülke tanımı):
 Ülkelerin dijital kimliklerini birbirlerine tanıtmak için ilk aşamada el sıkışma(key tanımlama) işlemi yapılır.
 Türkiye olarak Özbekistan ikili anlaşmasına istinaden Özbekistan epermit sistemini tanıtmak için; 
-/authorities  adresine post isteği ile aşağıdaki yapıda veri gönderilir.
-{"api_uri": http://uz-public-api }: api_uri ikili olarak anlaşma yapılan ülkenin sunduğu public api servis adresi. Public api adresinde bulunan detay bilgileri ile epermit sistemine ülke tanımlaması yapılır.
+`/authorities`  adresine post isteği ile aşağıdaki yapıda veri gönderilir.
+
+{
+  "api_uri": http://uz-public-api 
+}
+
+api_uri ikili olarak anlaşma yapılan ülkenin sunduğu public api servis adresi. Public api adresinde bulunan detay bilgileri ile epermit sistemine ülke tanımlaması yapılır.
 Özbekistan tarafıda Türkiyeyi kendi epermit sistemine tanıtmak için aynı işlemleri yapmalıdır.
 Kota Tanımı:
 Anlaşmalı olarak tanımlanan karşı ülkeye geçiş belgesi dağıtımı için kota tahsis işlemi yapılmasıdır.
 Örneğin Türkiye tarafı Özbek taşımacılara tahsis edilmek üzere Özbekistana geçiş belgesi kotası tahsis eder.  Belge tipleri  aşağıdaki gibidir;
 “BILITERAL”,”TRANSIT”,”THIRDCOUNTRY”, “BILITERAL_FEE”,”TRANSIT_FEE”,”THIRDCOUNTRY_FEE”,
 /authority_quotas     adresine aşağıdaki gibi post isteği  yapılır.
+```json
 {
     "authority_code": "UZ",
     "permit_type": "BILITERAL",
     "permit_year": 2024,
     "start_number": 1,
     "end_number": 250
-  }
+}
+```
 post isteği karşı internal api üzerinden karşı ülkenin public api    
-/events/quota-created 
+`/events/quota-created`
 iletilir. Karşı taraf servise anında iletilemediği durumda kuyruğa alınır arka planda otomatik gönderimi sağlanmaktadır.
 Geçiş Belgesi Düzenleme:
 Anlaşmalı ülkenin tanımladığı kotadan kendi taşımacıları için elektronik geçiş belgesi düzenleme işlemi.
 Örneğin Türkiye Özbekistan tarafının tanımladığı kota ile Türk taşımacılar için aşağıdaki örnekte olduğu gibi elektronik geçiş belgesi tanımı yapabilir.
-/permits aşağıdaki gibi post isteği gönderilir.
+`/permits` aşağıdaki gibi post isteği gönderilir.
+```json
 {
     "issued_for": "UZ",
     "permit_year": 2024,
@@ -126,7 +133,8 @@ Anlaşmalı ülkenin tanımladığı kotadan kendi taşımacıları için elektr
     "company_name": "TECT",
     "company_id": "123",
     "plate_number": "TECT"
-  }
+}
+```
 post isteği karşı internal api üzerinden karşı ülkenin public api    
 /events/permit-created 
 iletilir. Karşı taraf servise anında iletilemediği durumda kuyruğa alınır arka planda otomatik gönderimi sağlanmaktadır.
@@ -134,44 +142,52 @@ Geçiş Belgesi İptal İşlemi:
 Düzenlenen elektronik geçiş belgesi eğer düzenleyen ülke tarafından iptal edilmek istenirse ilgili belgenin giriş/çıkış (used) bilgisi karşı ülkeden iletilmemişse bu metod üzerinden iptali yapılıp karşı ülkeye bildirimi yapılarak kotadan düşmemesi sağlanabilir. Böylece iptal edilen geçiş belgesi numarası tekrar kullanılabilir ve yeni bir taşımacıya tahsis edilebilir.
 
 Örneğin Türkiye kullanıldı bilgisi iletilmemiş bir geçiş belgesine aşağıdaki örnekte olduğu gibi iptal bildirimi yapabilir.
-/permits/{permit-id} aşağıdaki gibi delete isteği gönderilir.
-Örneğin : /permits/TR-UZ-2022-1-2
+`/permits/{permit-id}` aşağıdaki gibi delete isteği gönderilir.
+Örneğin : `/permits/TR-UZ-2022-1-2`
   
 delete isteği internal api üzerinden karşı ülkenin public api    
-/events/permit-revoked 
+`/events/permit-revoked` 
 iletilir. Karşı taraf servise anında iletilemediği durumda kuyruğa alınır arka planda otomatik gönderimi sağlanmaktadır.
 
 Geçiş Belgesi Kullanım Bilgisi (Giriş-Çıkış) İşlemleri:
 Taşımacı, hedef ülkeye elektronik belge ile  giriş-çıkış yaptığında geçiş belgesinin giriş-çıkış bilgisi taşımacı ülke epermit sistemine iletilmelidir.
 
-permits/{permit_id}/activities
-Örnek: permits/TR-UZ-2022-1-1/activities
+`/permits/{permit_id}/activities`
+Örnek: `permits/TR-UZ-2022-1-1/activities`
 Örnek giriş bildirimi isteği:
+```json
 {
     "activity_type": "ENTRANCE",
     "activity_timestamp": 1656406166,
     "activity_details": "Giriş kapısı bilgisi"
-  }
+}
+```
 Örnek çıkış bildirimi isteği:
+```json
 {
     "activity_type": "EXIT",
     "activity_timestamp": 1656406166,
     "activity_details": "Çıkış kapısı bilgisi"
-  }
+}
+```
 Post  isteği internal api üzerinden karşı ülkenin public api    
-/events/permit-used 
+`/events/permit-used` 
 iletilir. Karşı taraf servise anında iletilemediği durumda kuyruğa alınır arka planda otomatik gönderimi sağlanmaktadır.
 HATA KODLARI VE AÇIKLAMALARI:
+```
 Response Yapısı:
 •	401 for invalid jws
 •	400 for bad request
 •	200 for succeed
-•	422 
+•	422
+```
+```json
 {
   "error_code": " aşağıdaki hata kodları ",
-	"error_message": " hata mesajı "
-
+  "error_message": " hata mesajı "
 }
+```
+```
 Hata Kodları:
     AUTHORITY_ALREADY_EXISTS: Tanımlanmak istenen ülke zaten mevcut:
     AUTHORITY_NOT_FOUND: Karşı ülke tanımlı olmadan işlem yapılması durumunda.
@@ -186,4 +202,5 @@ Hata Kodları:
     PERMITID_ALREADY_EXISTS: aynı seri numarası ile tanımlanmak istenen geçiş belgesi zaten mevcutsa.
     PERMIT_NOTFOUND: işlem yapılan geçiş belgesi bulunamadı ise.
     PERMIT_USED: iptal edilmek istenen geçiş belgesi kullanılmışsa.
-    INVALID_PERMITID: permit numarası hatalı ise 
+    INVALID_PERMITID: permit numarası hatalı ise
+```
