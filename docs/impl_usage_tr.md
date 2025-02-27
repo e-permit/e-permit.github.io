@@ -1,70 +1,89 @@
-# E-PERMIT KULLANIM KLAVUZU
+# E-PERMIT
+
+## Giriş
+E-Permit, ülkeler arası taşımacılık izinlerinin dijital olarak yönetilmesini sağlayan ve güvenli veri alışverişini temin eden elektronik bir izin sistemidir. Her ülke, birbirleriyle standartlaştırılmış ve güvenli bir şekilde izin bilgisi alışverişinde bulunmak amacıyla RESTful API’ler üzerinden iletişim kurar. Bu doküman; sistemin kurulumu, API endpoint’lerinin kullanımı, güvenlik, doğrulama, veri bütünlüğü ve hata yönetimi gibi kritik konuları detaylı bir şekilde ele almaktadır.
 
 ## Mimari:
- 
-e-permit mimarisi 2 farklı işlevleri içeren public-internal api olarak soyutlanmıştır. Temelde ayrımın sebebi güvenliktir. Public api dışa açık bir apidir. Internal api ise iç sistemlerin entegre edildiği apidir.
-Oluşturulan her mesaj kendi veri tabanına işlendikten sonra karşı tarafın sunduğu servisler üzerinden karşı tarafın veri tabanına da işlenmektedir.  Böylece tüm veriler senkron bir şekilde iki tarafta da tutulmaktadır. Bu işlemin tutarlılığı her mesajda önceki mesaj referans bilgisi de (previous_event_id) alınarak sağlanmaktadır.
- 
-### Public api:
-Taraf ülkelerin birbirine gönderdiği mesajları işleyen api dir.
-Protokole göre her ülke e-permit standartlarında(https://e-permit.github.io/) bir public api sunmalıdır.
 
-Public api için her ülkenin ortak kullanabileceği open source bir api hazırlanmıştır.
-Public api repository adresi:
-https://github.com/e-permit/e-permit-java
+E-Permit projesi, iki ana API bileşeni etrafında yapılandırılmıştır: Public API ve Internal API. Bu ayrımın temel nedeni, güvenlik ve işlevsellik açısından farklı gereksinimleri karşılamaktır.
 
-İstenirse public api uygulamasını içeren Docker image adresi üzerinden docker image indirilerek uygulama daha pratik bir şekilde kurulabilir.
-Docker image adresi: ghcr.io/e-permit/publicapi:latest
+- **Public API:**  
+  Dış dünyaya açılmış olan bu API, partner ülkelerle veri alışverişi için kullanılır. Diğer ülkeler, Public API üzerinden kendi public key’lerini sunabilir, izinleri veya kullanım bilgilerini gönderebilir. Bu API, dijital imzalar ve diğer doğrulama mekanizmaları sayesinde gelen mesajların güvenilirliğini sağlar. Örneğin Türkiye için public api https://disapi.uab.gov.tr/apigateway/e-permit olarak sunulmuştur. Bu adreste Türkiye'yi temsil eden public key listesi sunulmaktadır.
 
-Public api kurulumu Detaylı bilgiyi  https://github.com/e-permit/e-permit-java adresinde bulabilirsiniz.
+- **Internal API:**  
+  Kurum içindeki diğer sistemlerle entegrasyonu sağlayan bu API, yalnızca yerel sistemlerin erişimine açıktır. Internal API, kota tanımlama, izin düzenleme, iptal işlemleri gibi idari ve otomatik süreçleri yönetir.
+
+- **Senkran Veritabanları ve Veri Alışverişi:**  
+  Her iki API’de gönderilen her mesaj, önce kendi veritabanına işlenir; ardından aynı mesaj, karşı tarafın sunduğu servisler üzerinden partner ülkenin veritabanına da aktarılır. Bu mekanizma sayesinde, iki ülke arasında veri senkronizasyonu sağlanır. Ayrıca, mesajların tutarlılığı `previous_event_id` referans bilgisi kullanılarak izlenir; böylece, mesaj sıralaması ve veri bütünlüğü garanti altına alınır.
+
+Bu mimari yaklaşım, hem yerel sistemlerin verimli çalışmasını hem de ülkeler arası veri alışverişinin kesintisiz, güvenli ve senkronize bir şekilde gerçekleşmesini sağlar.
+
+
+## Kurulum ve Yapılandırma
+
+### Open-Source Kaynak Kodu ve Docker İmajları
+E-Permit sisteminin kaynak kodu GitHub üzerinde açık kaynak olarak sunulmaktadır. Gerekli durumlarda:
+- **Kaynak Kodu:** [e-permit-java GitHub Repository](https://github.com/e-permit/e-permit-java) – Projeyi derlemek için JDK (21 veya daha üstü) ve Maven (3.9.9 veya daha üstü) gerekmektedir. Proje dizininde `mvn clean package` komutunu çalıştırarak JAR dosyaları üretilebilir.
+- **Docker İmajları:** 
+  - Public API için: `ghcr.io/e-permit/publicapi:latest`
+  - Internal API için: `ghcr.io/e-permit/internalapi:latest`
+  
+Hazır Docker imajları, Docker Compose gibi araçlarla birlikte kullanılarak servislerin hızlıca kurulmasını sağlar.
 
 e-permit uygulamasını kullanacak her ülke öncelikli olarak kendi  özel anahtarını (private key) üretip punlic api üzerinden de sertifikasını (public key) yayımlamalıdır.
 Epermit sistemi kurulum aşamasında ilk keyi otomatik olarak oluşturmakta ve veri tabanında saklamaktadır.
 
-Public api  işlevleri:
+## API DETAYLARI
 
-1.	Diğer ülkelere ülkesinin public keyini sunmak.  İletilen mesajlar ülkenin özel anahtarı (private key) ile mühürlenir. Public key ile public api üzerinde doğrulaması yapılır. 
-/epermit-configuration
+### Public API
 
-Örnek türkiye için public key aşağıdaki adresten sunulmaktadır.
-https://disapi.uab.gov.tr/apigateway/e-permit/epermit-configuration
+Public API endpointleri  karşı ülkenin internal apisi tarafından kullanılmak için hizmet verir. Bu endpointler:
 
-2.	QR kod ile düzenlenen elektronik geçiş belgesinin düzenleyen ülke public apisi ile doğrulanması.
-`/epermit-verify/{QR Code}`
+*`/`* 
 
-3.	Diğer ülkeler tarafından  gönderilen permit ve kota taleplerini karşılamak. Bu işlevler karşı ülkenin internal apisi tarafından kullanılmaktadır.
+Her ülke kendi kimliğini temsil eden public key listesini sunar.
 
-İşlev tanımları:
-`/events/key-created`
+*`/verify/{QR Code}`*
+QR kod ile düzenlenen elektronik geçiş belgesinin doğrulanmasını sağlar.
+
+
+Olaylar:
+
+*`/events/key-created`*
 
 Üretilen public keyi karşı ülkeye sunma bu metotla yapılır.
-`/events/key-revoked`
+
+*`/events/key-revoked`*
 
 İptal edilen public keyi karşı ülkeye sunma bu metotla yapılır.
-`/events/quota-created`
+
+*`/events/quota-created`*
 
 Karşı ülkeye permit düzenlemesi için kota tanımlama işlemi bu metod ile yapılır.
 
 Örnek olarak Türkiye Özbekistana bir kota tanımı yaptığında Türkiye Özbekistan public apisinin  kota bilgilerini bu metoda gönderir.
 
-`/events/permit-created`
+*`/events/permit-created`*
 
 Düzenlenen permiti karşı ülkeye gönderme işlemini yapar.
 
 Örnek olarak Türkiye Özbekistanın tanımladığı kotadan kendi ülkesinin taşıtı için bir izin düzenlediğinde Özbekistan public apisinin bu metoduna  permit bilgilerini gönderir.
-`/events/permit-revoked`
+
+*`/events/permit-revoked`*
 
 İptal edilen permiti karşı ülkeye gönderme işlemini yapar.
 
 Örnek olarak Türkiye Özbekistanın tanımladığı kotadan kendi ülkesinin taşıtı için bir izin düzenlediğinde permit used bilgisini göndermeden ilgili iznin iptalini yapıp yeni izin düzenleyebilir. İptali yapılan permit bilgisi Özbekistan public apisinin bu metoduna  gönderilir.
 
-`/events/permit-used`
+*`/events/permit-used`*
 
 Düzenlenen permitin karşı ülkeye kontrol noktalarından(sınır kapılarından) kullanımı bilgisinin (Giriş ve Çıkış) gönderimini yapar. 
 
 Örnek olarak Türkiye Özbekistanın tanımladığı kotadan kendi ülkesinin taşıtı için bir izin düzenledikten sonra ilgili taşıt Özbekistan sınır kapılarından Giriş ve Çıkış yaptıktan sonra Özbekistan tarafından ilgili permit used bilgisi Türkiye Public apisindeki bu metoda iletilir.
 
-İnternal api:
+
+
+### Internal API
 
 Taraf ülkelerin kendi sistemleri tarafından kullanılması için oluşturulan api.
 
@@ -98,21 +117,24 @@ El sıkışma (ülke tanımı):
 Türkiye olarak Özbekistan ikili anlaşmasına istinaden Özbekistan epermit sistemini tanıtmak için; 
 `/authorities`  adresine post isteği ile aşağıdaki yapıda veri gönderilir.
 
+```json
 {
   "api_uri": http://uz-public-api 
 }
+```
 
 api_uri ikili olarak anlaşma yapılan ülkenin sunduğu public api servis adresi. Public api adresinde bulunan detay bilgileri ile epermit sistemine ülke tanımlaması yapılır.
 Özbekistan tarafıda Türkiyeyi kendi epermit sistemine tanıtmak için aynı işlemleri yapmalıdır.
 Kota Tanımı:
 Anlaşmalı olarak tanımlanan karşı ülkeye geçiş belgesi dağıtımı için kota tahsis işlemi yapılmasıdır.
 Örneğin Türkiye tarafı Özbek taşımacılara tahsis edilmek üzere Özbekistana geçiş belgesi kotası tahsis eder.  Belge tipleri  aşağıdaki gibidir;
-“BILITERAL”,”TRANSIT”,”THIRDCOUNTRY”, “BILITERAL_FEE”,”TRANSIT_FEE”,”THIRDCOUNTRY_FEE”,
-/authority_quotas     adresine aşağıdaki gibi post isteği  yapılır.
+`BILATERAL`,`TRANSIT`,`THIRDCOUNTRY`, `BILATERAL_FEE`,`TRANSIT_FEE`,`THIRDCOUNTRY_FEE`
+
+`/authority_quotas` adresine aşağıdaki gibi post isteği  yapılır.
 ```json
 {
     "authority_code": "UZ",
-    "permit_type": "BILITERAL",
+    "permit_type": "BILATERAL",
     "permit_year": 2024,
     "start_number": 1,
     "end_number": 250
@@ -129,7 +151,7 @@ Anlaşmalı ülkenin tanımladığı kotadan kendi taşımacıları için elektr
 {
     "issued_for": "UZ",
     "permit_year": 2024,
-    "permit_type": "BILITERAL",
+    "permit_type": "BILATERAL",
     "company_name": "TECT",
     "company_id": "123",
     "plate_number": "TECT"
@@ -139,7 +161,7 @@ post isteği karşı internal api üzerinden karşı ülkenin public api
 /events/permit-created 
 iletilir. Karşı taraf servise anında iletilemediği durumda kuyruğa alınır arka planda otomatik gönderimi sağlanmaktadır.
 Geçiş Belgesi İptal İşlemi:
-Düzenlenen elektronik geçiş belgesi eğer düzenleyen ülke tarafından iptal edilmek istenirse ilgili belgenin giriş/çıkış (used) bilgisi karşı ülkeden iletilmemişse bu metod üzerinden iptali yapılıp karşı ülkeye bildirimi yapılarak kotadan düşmemesi sağlanabilir. Böylece iptal edilen geçiş belgesi numarası tekrar kullanılabilir ve yeni bir taşımacıya tahsis edilebilir.
+Düzenlenen elektronik geçiş belgesi eğer düzenleyen ülke tarafından iptal edilmek istenirse ilgili belgenin giriş/çıkış (used) bilgisi karşı ülkeden iletilmemişse bu metod üzerinden iptali yapılıp karşı ülkeye bildirimi yapılabilir. 
 
 Örneğin Türkiye kullanıldı bilgisi iletilmemiş bir geçiş belgesine aşağıdaki örnekte olduğu gibi iptal bildirimi yapabilir.
 `/permits/{permit-id}` aşağıdaki gibi delete isteği gönderilir.
@@ -152,7 +174,8 @@ iletilir. Karşı taraf servise anında iletilemediği durumda kuyruğa alınır
 Geçiş Belgesi Kullanım Bilgisi (Giriş-Çıkış) İşlemleri:
 Taşımacı, hedef ülkeye elektronik belge ile  giriş-çıkış yaptığında geçiş belgesinin giriş-çıkış bilgisi taşımacı ülke epermit sistemine iletilmelidir.
 
-`/permits/{permit_id}/activities`
+*`/permits/{permit_id}/activities`*
+
 Örnek: `permits/TR-UZ-2022-1-1/activities`
 Örnek giriş bildirimi isteği:
 ```json
