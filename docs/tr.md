@@ -82,7 +82,6 @@ Düzenlenen permitin karşı ülkeye kontrol noktalarından(sınır kapılarınd
 Örnek olarak Türkiye Özbekistanın tanımladığı kotadan kendi ülkesinin taşıtı için bir izin düzenledikten sonra ilgili taşıt Özbekistan sınır kapılarından Giriş ve Çıkış yaptıktan sonra Özbekistan tarafından ilgili permit used bilgisi Türkiye Public apisindeki bu metoda iletilir.
 
 
-
 ### Internal API
 
 Taraf ülkelerin kendi sistemleri tarafından kullanılması için oluşturulan api.
@@ -90,7 +89,7 @@ Taraf ülkelerin kendi sistemleri tarafından kullanılması için oluşturulan 
 Kota ve permit işlemlerinin karşı ülkenin public apisi ile entegre biçimde yönetilebileceği internal api uygulamasıda open source olarak yayımlanmıştır. 
 Docker image adresi: ghcr.io/e-permit/internalapi:latest
 
-### Örnek ortam değişkeleri:
+#### Örnek ortam değişkeleri:
 ```env
 SPRING_PROFILES_ACTIVE=dev
 HIBERNATE_DDL_AUTO=none
@@ -108,9 +107,8 @@ EPERMIT_KEY_PASSWORD=<admin pwd for encrypting key>
 EPERMIT_LOG_BASEPATH=<log base path e.g /var/log/epermit> 
 ```
 
-Örneğin Türkiye olarak open source public api yanında internal apiyide kullanıyoruz. Kendi iç süreçlerimizdeki diğer uygulamaları(e-devlet, unet, gebos ,gümrük servisi…vb ) direkt karşı ülkenin public apisini kullanmak yerine arada Proxy olarak internal api üzerinden e-permit sistemine entegre ederek daha sürdürülebilir bir şekilde entegrasyonlarımızı sağladık.
 
-İnternal api işlevleri:
+#### İşlevler:
 
 El sıkışma (ülke tanımı):
 Ülkelerin dijital kimliklerini birbirlerine tanıtmak için ilk aşamada el sıkışma(key tanımlama) işlemi yapılır.
@@ -215,7 +213,7 @@ Hata Kodları:
     AUTHORITY_ALREADY_EXISTS: Tanımlanmak istenen ülke zaten mevcut:
     AUTHORITY_NOT_FOUND: Karşı ülke tanımlı olmadan işlem yapılması durumunda.
     EVENT_ALREADY_EXISTS: Gönderilen event tekrr gönderilmeye çalışılırsa.
-    PREVIOUS_EVENT_NOTFOUND: Olay zincirinin iki ülke arasında senkronizasyonun           bozulduğu durumda.
+    PREVIOUS_EVENT_NOTFOUND: Olay zincirinin iki ülke arasında senkronizasyonun bozulduğu durumda.
     GENESIS_EVENT_ALREADY_EXISTS: ilk olay tekrar oluşturulması durumunda.
     KEYID_ALREADY_EXISTS: tanımlanmak istenen keyid zaten mevcutsa.
     KEY_NOTFOUND: imzalı olayın doğrulaması sırasında key bulunamadı ise.
