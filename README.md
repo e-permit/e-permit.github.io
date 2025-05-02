@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Permit(Dozvola) is a document that authorizes the vehicle in a transport operation to cross the border of the verifier country. In the current system, this document (dozvola) is physically prepared/printed by verifier country and delivered to the issuer(haulier) country in a certain number. Then the issuer(haulier) country issues a permit credential for vehicle. Difficulties in the implementation of this system and the security issues required the digitalization of the permit.
+Dozvola(Permit) is a document that authorizes the vehicle in a transport operation to cross the border of the verifier country. In the current system, this document (dozvola) is physically prepared/printed by verifier country and delivered to the issuer(haulier) country in a certain number. Then the issuer(haulier) country issues a permit credential for vehicle. Difficulties in the implementation of this system and the security issues required the digitalization of the permit.
 
 This text represents the arrangement of the specifications about the e-permit (digital permit).
 
@@ -14,9 +14,28 @@ Permit can be considered as a verifiable credential except some of its features.
 - The parties that deliver and receive the e-permit are known in advance of the exchange.
 - Information about the usage (enter/exit permits) of the permit is important for the countries (permit quota/usage).
 
+Considering the above-mentioned characteristics; the permit has an authentic format, it is created by the issuing authority and sealed for the quota authority. According to this standard, each authority must provide its own e-seal to sign digital message and permits with its own private key.
+
 ![w:1000](img/e-permit-flow.png)
 
-Considering the above-mentioned characteristics; the permit has an authentic format, it is created by the issuing authority and sealed for the quota authority. According to this standard, each authority must provide its own e-seal to sign digital message and permits with its own private key. 
+
+## Concepts
+
+### Authority
+
+The authority is defined as a country or organization that issues permits, quotas or verifies the permits. If the authority is a country, the authority code is the two letter country code. If the authority is an organization, the authority code is the unique identifier of the organization. For example, TR, UZ, UA, BSEC etc. Each authority has its own e-seal to sign the data.
+
+### Quota Authority(Issued For)
+
+The quota authority(country or organization) that defines the dozvola(permit) quota for the issuing authority. In general it is the same with control authority however in some cases it can be an organization e.g. BSEC, TRACECA.
+
+### Issuing Authority(Issuer)
+
+The authority that is responsible for issuing dozvola(permit) for its hauliers. It should be only a country.
+
+### Control Authority
+
+The authority that is responsible for verify the dozvola. It should be only a country. 
 
 ## Flow
 
@@ -31,27 +50,15 @@ sequenceDiagram
     Controll Authority->>Issuing Authority: Verify Permit and Send usage 
 ```
 
-## Concepts
-
-### Authority
-
-The authority is defined as a country or organization that issues permits, quotas or verifies the permits. If the authority is a country, the authority code is the two letter country code. If the authority is an organization, the authority code is the unique identifier of the organization. For example, TR, UZ, UA, BSEC etc. Each authority has its own e-seal to sign the data.
-
-### Issuer
-
-The issuer is defined as the authority(country) that issues the permit.
-
-### Issued For
-
-The issued for is defined as the quota authority(country or organization) that issued for the permit. It is responsible for defining quota to issuer authority(country). In general it is the control authority but in some scenerious it can be an organization e.g. BSEC, TRACECA.
+## Entities
 
 ### Quota
 
 An authority should define serial number quotas in certain intervals for haulier's transport authority. This process is defined as quota description. By this way the authority can produce permits for its own hauliers in the defined quota interval. An authority should define the quota for the haulier in the following table:
 
-| No | Field | Description | Format | 
+| No | Field | Description | Example | 
 | ---- | ------| ----------- | -------- |
-| 1 | permit_year |  Year of the quota | 2021 |
+| 1 | permit_year |  Year of the quota | 2025 |
 | 2 | permit_type | Quota type of the quota | 1 |
 | 3 | quantity | Quantity of the quota | 20 |
 
@@ -73,19 +80,19 @@ The permit id is the combination of permit year, permit type, permit issuer and 
 <div class="timeline">
     <div class="event">
       <span class="code">TR</span>
-      <div class="label">Permit issuer code</div>
+      <div class="label">Issuer authority</div>
     </div>
     <div class="event">
-      <span class="code">GE</span>
-      <div class="label">Permit issued for code</div>
+      <span class="code">UZ</span>
+      <div class="label">Quota authority</div>
     </div>
     <div class="event">
       <span class="code">2025</span>
-      <div class="label">Year of permit</div>
+      <div class="label">Year of the permit</div>
     </div>
     <div class="event">
       <span class="code">1</span>
-      <div class="label">Permit type (BILATERAL)</div>
+      <div class="label">Type of the permit (BILATERAL)</div>
     </div>
     <div class="event">
       <span class="code">1</span>
@@ -114,11 +121,11 @@ The permit id is the combination of permit year, permit type, permit issuer and 
 
 ### Usage(Entry/Exit)
 
-| No | Field | Description | Format | 
+| No | Field | Description | Example | 
 | ---- | ------| ----------- | -------- | 
 | 2 | activity_type |  Usage type | ENTERANCE-EXIT |
-| 3 | activity_timestamp | The UTC time of the activity  | Long |
-| 4 | activity_details |  Activity details(optional) | Text(max 1000) |
+| 3 | activity_timestamp | The UTC time of the activity  | 1746172534 |
+| 4 | activity_details |  Activity details(optional) | A Border |
 
 <style>
     .timeline {
