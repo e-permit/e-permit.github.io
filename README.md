@@ -57,8 +57,10 @@ Key fields in a quota definition include:
 
 | No | Field            | Description                                                                | Example |
 | -- | ---------------- | -------------------------------------------------------------------------- | ------- |
-| 1  | **permit_year** | Year that the quota applies to                                             | 2025    |
-| 2  | **permit_type** | Type/category of permit for this quota (see [Permit Types](#permit-types)) | 1       |
+| 1  | **permit_issuer** |    Permit Issuing Authority                                               | TR    |
+| 1  | **permit_issued_for** | Permit Quota Authority                                                | UZ    |
+| 1  | **permit_year** | Year that the quota applies to                                              | 2025    |
+| 2  | **permit_type** | Type/category of permit for this quota (see [Permit Types](#permit-types))  | 1       |
 | 3  | **quantity**     | Number of permits of that type allocated for that year                     | 20      |
 
 *Note:* In practice, a quota definition would also be associated with the specific issuing authority and quota authority (e.g., “UZ grants TR 20 permits of type 1 for 2025”). This context is typically understood from the communication channel or documentation of the bilateral agreement.
@@ -169,9 +171,10 @@ The data fields for a permit activity are as follows:
 
 | No  | Field                   | Description                                                                                                        | Example                  |
 | --- | ----------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------ |
-| (1) | **activity_type**      | Type of usage event. For example, `"ENTRY"` or `"EXIT"`.                                                           | ENTRY                    |
-| (2) | **activity_timestamp** | Date/time of the event in UTC, typically recorded as a Unix timestamp (seconds since Jan 1, 1970).                 | 1746172534               |
-| (3) | **activity_details**   | Additional details about the event (optional). This could be the name of the border crossing or any relevant note. | "Alat border checkpoint" |
+| (1) | **permit_id**           | The permit that has activity.                                                                                      | TR-UZ-2025-1-1           |
+| (2) | **activity_type**       | Type of usage event. For example, `"ENTRY"` or `"EXIT"`.                                                           | ENTRY                    |
+| (3) | **activity_timestamp**  | Date/time of the event in UTC, typically recorded as a Unix timestamp (seconds since Jan 1, 1970).                 | 1746172534               |
+| (4) | **activity_details**    | Additional details about the event (optional). This could be the name of the border crossing or any relevant note. | "Alat border checkpoint" |
 
 **Notes:**
 
@@ -186,8 +189,6 @@ In this example, the "ENTRY" record indicates the truck entered on that date via
 These records would be transmitted back to the issuing authority (Turkey) to inform them that the permit was used for an entry and an exit. Once recorded, an activity (ENTRY or EXIT) cannot be revoked. 
 
 > **⚠️ Note: The e-permit core system does not enforce how many times a permit may be used(entry/exit). Each control authority should implement its own rules to check. For example a bilateral permit is limited to two events—one ENTRY and one EXIT—but that rule lives in the border-control logic, not in the core spec.**
-
-Example: 
 
 ## System Workflow
 
