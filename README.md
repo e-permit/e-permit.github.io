@@ -76,6 +76,8 @@ Permits come in different categories, which affect how they can be used. The sys
 | 3    | Third Country             |
 | 4    | Unladen Entry/Return Load |
 
+<div id="permit-types"></div>
+
 **Permit Type Descriptions:**
 
 * **Bilateral** – A permit for transport operations directly between the two partner countries (the issuing country and the quota/control country). For example, a Turkish truck carrying goods to Uzbekistan would use a bilateral permit.
@@ -325,4 +327,49 @@ By following this specification and the above guidelines, agencies can implement
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
     mermaid.initialize({startOnLoad:true,theme:'neutral'})
     await mermaid.run({querySelector:'code.language-mermaid'})
-</script>
+  </script>
+  <script type="module">
+    async function renderData(url, placeholder) {
+        const resp = await fetch(url);
+        const data = await resp.json(); // assume an array of objects
+        const container = document.getElementById('json-table');
+        // Empty table if no data
+        const table = document.createElement('table');
+        if (!Array.isArray(data) || data.length === 0) {
+          return table;
+        }
+    
+        // Determine column list
+        const cols = Array.from(
+          data.reduce((set, row) => {
+            Object.keys(row).forEach(k => set.add(k));
+            return set;
+          }, new Set())
+        );
+    
+        // Build thead
+        const thead = table.createTHead();
+        const headerRow = thead.insertRow();
+        cols.forEach(col => {
+          const th = document.createElement('th');
+          th.textContent = col;
+          headerRow.appendChild(th);
+        });
+    
+        // Build tbody
+        const tbody = table.createTBody();
+        data.forEach(row => {
+          const tr = tbody.insertRow();
+          cols.forEach(col => {
+            const td = tr.insertCell();
+            // Coerce null/undefined → empty string
+            td.textContent = row[col] != null ? row[col] : '';
+          });
+        });
+    
+        container.appendChild(table);
+    }
+
+    await renderData('/data/permit-types.json', "permit-types");
+
+  </script>
