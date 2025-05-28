@@ -68,12 +68,9 @@ Key fields in a quota definition include:
 ### Permit Types
 
 Permits come in different categories, which affect how they can be used. The system defines a code for each permit type. The common permit types and their codes are:
-
 <br />
-<br />
-
 <div id="permit-types-div"></div>
-
+<br />
 **Permit Type Descriptions:**
 
 * **Bilateral** – A permit for transport operations directly between the two partner countries (the issuing country and the quota/control country). For example, a Turkish truck carrying goods to Uzbekistan would use a bilateral permit.
