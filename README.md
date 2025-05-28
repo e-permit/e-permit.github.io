@@ -72,7 +72,7 @@ Permits come in different categories, which affect how they can be used. The sys
 <br />
 <br />
 
-<div id="permit-types"></div>
+<div id="permit-types-div"></div>
 
 **Permit Type Descriptions:**
 
@@ -369,6 +369,6 @@ By following this specification and the above guidelines, agencies can implement
         container.appendChild(table);
     }
 
-    await renderData('/data/permit-types.json', "permit-types");
+    await renderData('/data/permit-types.json', "permit-types-div");
 
   </script>
