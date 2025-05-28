@@ -68,8 +68,10 @@ Key fields in a quota definition include:
 ### Permit Types
 
 Permits come in different categories, which affect how they can be used. The system defines a code for each permit type. The common permit types and their codes are:
+
 <br />
 <br />
+
 <div id="permit-types"></div>
 
 **Permit Type Descriptions:**
