@@ -329,10 +329,10 @@ By following this specification and the above guidelines, agencies can implement
     await mermaid.run({querySelector:'code.language-mermaid'})
   </script>
   <script type="module">
-    async function renderData(url, container) {
+    async function renderData(url, placeholder) {
         const resp = await fetch(url);
         const data = await resp.json(); // assume an array of objects
-        const container = document.getElementById(container);
+        const container = document.getElementById(placeholder);
         // Empty table if no data
         const table = document.createElement('table');
         if (!Array.isArray(data) || data.length === 0) {
