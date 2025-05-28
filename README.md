@@ -69,13 +69,6 @@ Key fields in a quota definition include:
 
 Permits come in different categories, which affect how they can be used. The system defines a code for each permit type. The common permit types and their codes are:
 
-| Code | Name                      |
-| ---- | ------------------------- |
-| 1    | Bilateral                 |
-| 2    | Transit                   |
-| 3    | Third Country             |
-| 4    | Unladen Entry/Return Load |
-
 <div id="permit-types"></div>
 
 **Permit Type Descriptions:**
@@ -220,6 +213,9 @@ By following this specification and the above guidelines, agencies can implement
 
 
 <style>
+    th::first-letter {
+    text-transform: capitalize;
+    }
     .timeline {
       display: flex;
       justify-content: left;
